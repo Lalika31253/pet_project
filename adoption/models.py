@@ -60,11 +60,6 @@ class User(models.Model):
     last_name = models.CharField(max_length=100)
     username = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
-    pets = models.ManyToManyField(
-        Pet,
-        related_name='users',
-        blank=True
-    )
 
     def __str__(self):
         return self.username
@@ -92,6 +87,9 @@ class AdoptionApplication(models.Model):
         default='pending'
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user} applied for {self.pet}'
 
 
 class Favorite(models.Model):
