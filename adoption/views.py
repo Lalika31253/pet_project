@@ -25,6 +25,8 @@ class RegisterView(CreateView):
         login(self.request, self.object)
         return response
 
+class LandingView(TemplateView):
+    template_name = 'adoption/landing.html'
 # ─────────────────────────────
 # BRANCHES
 # ─────────────────────────────
