@@ -6,6 +6,8 @@ urlpatterns = [
 
     # ── Public ────────────────────────────────────────────────────────────
     path('', views.LandingView.as_view(), name='landing'),
+    path('about', views.AboutView.as_view(), name='about'),
+    path('help', views.HelpView.as_view(), name='help'),
 
     # ── Auth ──────────────────────────────────────────────────────────────
     path('login/',
@@ -20,7 +22,7 @@ urlpatterns = [
 
     # ── Pets ──────────────────────────────────────────────────────────────
     path('pets/',                        views.PetListView.as_view(),          name='pet-list'),
-    path('pets/<int:pk>/',               views.PetDetailView.as_view(),         name='pet-detail'),
+    path('pets/<int:pk>/',               views.PetDetailView.as_view(),        name='pet-detail'),
     path('pets/add/',                    views.PetCreateView.as_view(),        name='pet-create'),
     path('pets/search/',                 views.PetSearchView.as_view(),        name='pet-search'),
     path('pets/<int:pk>/edit/',          views.PetUpdateView.as_view(),        name='pet-update'),

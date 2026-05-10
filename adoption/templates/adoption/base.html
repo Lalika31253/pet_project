@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="retro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Pet Project{% endblock %}</title>
+  <!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- DaisyUI (must come after Tailwind) -->
+<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css"
+      rel="stylesheet">
+</head>
+<!-- hx-headers sends the CSRF token with every HTMX request -->
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+  <nav>
+    <a href="{% url 'about' %}">About Us</a> |
+    <a href="{% url 'help' %}">Help to animals</a> |
+    <a href="{% url 'pet-list' %}">Animal Adoption</a> |
+    <a href="{% url 'pet-list' %}">Lost and Found</a> |
+   
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+   
+    <button hx-post="{% url 'login' %}" 
+    hx-target="body"
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' >Login</button>
+
+    <button hx-post="{% url 'logout' %}" 
+            hx-target="body"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' >Logout</button>
+    
+
+</nav>
+  <hr>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</body>
+</html>

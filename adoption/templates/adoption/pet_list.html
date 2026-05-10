@@ -1,0 +1,27 @@
+{% extends 'adoption/base.html' %}
+{% block title %}All Cars{% endblock %}
+{% block content %}
+<h1>All Petss</h1>
+{% comment %} <a href="{% url 'pet-create' %}">+ Add Pet</a> {% endcomment %}
+
+<!--
+  hx-get      → the URL HTMX calls
+  hx-trigger  → fires on keyup with 300 ms debounce
+  hx-target   → the element whose HTML gets replaced
+  hx-swap     → replace the inner HTML of the target
+-->
+<input
+  type="search"
+  name="q"
+  placeholder="Search by make, model or branch..."
+  hx-get="{% url 'pet-search' %}"
+  hx-trigger="keyup changed delay:300ms"
+  hx-target="#pet-results"
+  hx-swap="innerHTML"
+>
+
+<!-- Initial full list rendered by the server -->
+<div id="pet-results">
+  {% include 'adoption/partials/pet_table.html' %}
+</div>
+{% endblock %}

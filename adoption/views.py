@@ -27,6 +27,14 @@ class RegisterView(CreateView):
 
 class LandingView(TemplateView):
     template_name = 'adoption/landing.html'
+
+class AboutView(TemplateView):
+    template_name = "adoption/about.html"
+
+class HelpView(TemplateView):
+    template_name = "adoption/help.html"
+
+
 # ─────────────────────────────
 # BRANCHES
 # ─────────────────────────────
