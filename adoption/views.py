@@ -10,6 +10,9 @@ from .forms import RegisterForm
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from rest_framework import generics
+from .serializers import PetSerializer, BranchSerializer, FavoriteSerializer
+
 
 # ─────────────────────────────
 # AUTHENTICATION
@@ -44,10 +47,19 @@ class BranchListView(ListView):
     context_object_name = "branches"
 
 
-class BranchDetailView(DetailView):
-    model = Branch
-    template_name = "adoption/branch_detail.html"
-    context_object_name = "branch"
+# class BranchDetailView(DetailView):
+#     model = Branch
+#     template_name = "adoption/branch_detail.html"
+#     context_object_name = "branch"
+    
+class BranchListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Branch.objects.all()
+    serializer_class = BranchSerializer
+
+
+class BranchDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Branch.objects.all()
+    serializer_class = BranchSerializer
 
 
 # ─────────────────────────────
@@ -59,48 +71,85 @@ class PetListView(ListView):
     context_object_name = "pets"
 
 
-class PetDetailView(DetailView):
-    model = Pet
-    template_name = "adoption/pet_detail.html"
-    context_object_name = "pet"
+# class PetDetailView(DetailView):
+#     model = Pet
+#     template_name = "adoption/pet_detail.html"
+#     context_object_name = "pet"
 
 
-class PetCreateView(LoginRequiredMixin, CreateView):
-    model = Pet
-    fields = "__all__"
-    template_name = "adoption/pet_form.html"
-    success_url = reverse_lazy("pet-list")
+# class PetCreateView(LoginRequiredMixin, CreateView):
+#     model = Pet
+#     fields = "__all__"
+#     template_name = "adoption/pet_form.html"
+#     success_url = reverse_lazy("pet-list")
+    
+
+# class PetUpdateView(LoginRequiredMixin, UpdateView):
+#     model = Pet
+#     fields = "__all__"
+#     template_name = "adoption/pet_form.html"
+#     success_url = reverse_lazy("pet-list")
 
 
-class PetUpdateView(LoginRequiredMixin, UpdateView):
-    model = Pet
-    fields = "__all__"
-    template_name = "adoption/pet_form.html"
-    success_url = reverse_lazy("pet-list")
+# class PetDeleteView(LoginRequiredMixin, DeleteView):
+#     model = Pet
+#     template_name = "adoption/pet_confirm_delete.html"
+#     success_url = reverse_lazy("pet-list")
 
 
-class PetDeleteView(LoginRequiredMixin, DeleteView):
-    model = Pet
-    template_name = "adoption/pet_confirm_delete.html"
-    success_url = reverse_lazy("pet-list")
+# class PetSearchView(ListView):
+#     model = Pet
+#     template_name = "adoption/pet_list.html"
+#     context_object_name = "pets"
+
+#     def get_queryset(self):
+#         query = self.request.GET.get("q")
+#         if query:
+#             return Pet.objects.filter(name__icontains=query)
+#         return Pet.objects.all()
 
 
-class PetSearchView(ListView):
-    model = Pet
-    template_name = "adoption/pet_list.html"
-    context_object_name = "pets"
+# class PetInlineDeleteView(LoginRequiredMixin, DeleteView):
+#     model = Pet
+#     template_name = "adoption/pet_confirm_delete.html"
+#     success_url = reverse_lazy("pet-list")
+
+
+class PetListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Pet.objects.all()
+    serializer_class = PetSerializer
+
+    def get_queryset(self):
+        queryset = Pet.objects.all()
+
+        species = self.request.query_params.get('species')
+        if species:
+            queryset = queryset.filter(species=species)
+
+        gender = self.request.query_params.get('gender')
+        if gender:
+            queryset = queryset.filter(gender=gender)
+
+        return queryset
+
+
+class PetDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Pet.objects.all()
+    serializer_class = PetSerializer
+
+
+class PetSearchAPIView(generics.ListAPIView):
+    serializer_class = PetSerializer
 
     def get_queryset(self):
         query = self.request.GET.get("q")
+
         if query:
             return Pet.objects.filter(name__icontains=query)
+
         return Pet.objects.all()
 
 
-class PetInlineDeleteView(LoginRequiredMixin, DeleteView):
-    model = Pet
-    template_name = "adoption/pet_confirm_delete.html"
-    success_url = reverse_lazy("pet-list")
 
 
 # ─────────────────────────────
@@ -153,13 +202,17 @@ class UserSearchView(ListView):
 # ─────────────────────────────
 # FAVORITES
 # ─────────────────────────────
-class FavoriteListView(LoginRequiredMixin, ListView):
-    model = Favorite
-    template_name = "adoption/favorite_list.html"
-    context_object_name = "favorites"
+# class FavoriteListView(LoginRequiredMixin, ListView):
+#     model = Favorite
+#     template_name = "adoption/favorite_list.html"
+#     context_object_name = "favorites"
 
-    def get_queryset(self):
-        return Favorite.objects.filter(user=self.request.user).select_related("pet")
+#     def get_queryset(self):
+#         return Favorite.objects.filter(user=self.request.user).select_related("pet")
+    
+class FavoriteAPIView(generics.ListCreateAPIView):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
 
 
 # ─────────────────────────────
