@@ -1,4 +1,4 @@
-{# This template renders with NO extends — it is a fragment, not a full page #}
+{% comment %} {# This template renders with NO extends — it is a fragment, not a full page #}
 <table border="1">
   <tr>
     <th>Pet</th><th>Year</th><th>Price</th>
@@ -28,5 +28,29 @@
     </tr>
   {% empty %}
     <tr><td colspan="6">No pets found.</td></tr>
+  {% endfor %}
+</table> {% endcomment %}
+
+<table border="1" cellpadding="10">
+  <tr>
+      <th>Name</th>
+      <th>Species</th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Branch</th>
+  </tr>
+
+  {% for pet in pets %}
+  <tr>
+      <td>{{ pet.name }}</td>
+      <td>{{ pet.species }}</td>
+      <td>{{ pet.gender }}</td>
+      <td>{{ pet.age }}</td>
+      <td>{{ pet.branch.name }}</td>
+  </tr>
+  {% empty %}
+  <tr>
+      <td colspan="5">No pets found.</td>
+  </tr>
   {% endfor %}
 </table>

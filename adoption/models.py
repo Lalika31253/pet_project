@@ -25,6 +25,11 @@ class Pet(models.Model):
         ('male', 'Male'),
     ]
 
+    PET_TYPE_CHOICES = [
+        ('shelter', 'Shelter'),
+        ('lost', 'Lost/Found'),
+    ]
+
     name = models.CharField(max_length=100)
     age = models.IntegerField()
     breed = models.CharField(max_length=100)
@@ -44,6 +49,13 @@ class Pet(models.Model):
     )
     location = models.CharField(max_length=100)
     adoption_status = models.BooleanField(default=True)
+
+    pet_type = models.CharField(
+        max_length=20,
+        choices=PET_TYPE_CHOICES,
+        default='shelter'
+    )
+    
     branch = models.ForeignKey(
         'Branch',
         on_delete=models.CASCADE,

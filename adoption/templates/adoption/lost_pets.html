@@ -1,10 +1,10 @@
 {% extends 'adoption/base.html' %}
 
-{% block title %}All Pets{% endblock %}
+{% block title %}Lost Pets{% endblock %}
 
 {% block content %}
 
-<h1>All Pets</h1>
+<h1>Pets</h1>
 
 <input
   type="search"
@@ -17,7 +17,7 @@
 />
 
 <div id="pet-results">
-  {% include 'adoption/partials/pet_table.html' %}
+  {% include 'adoption/partials/lost_pet_table.html' %}
 </div>
 
 {% endblock %}
