@@ -11,7 +11,9 @@ from .forms import RegisterForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from rest_framework import generics
-from .serializers import PetSerializer, BranchSerializer, FavoriteSerializer
+
+from django.views.generic import ListView
+
 
 
 # ─────────────────────────────
@@ -47,28 +49,28 @@ class BranchListView(ListView):
     context_object_name = "branches"
 
 
-# class BranchDetailView(DetailView):
-#     model = Branch
-#     template_name = "adoption/branch_detail.html"
-#     context_object_name = "branch"
+# # class BranchDetailView(DetailView):
+# #     model = Branch
+# #     template_name = "adoption/branch_detail.html"
+# #     context_object_name = "branch"
     
-class BranchListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Branch.objects.all()
-    serializer_class = BranchSerializer
+# class BranchListCreateAPIView(generics.ListCreateAPIView):
+#     queryset = Branch.objects.all()
+#     serializer_class = BranchSerializer
 
 
-class BranchDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Branch.objects.all()
-    serializer_class = BranchSerializer
+# class BranchDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Branch.objects.all()
+#     serializer_class = BranchSerializer
 
 
-# ─────────────────────────────
-# PETS
-# ─────────────────────────────
-class PetListView(ListView):
-    model = Pet
-    template_name = "adoption/pet_list.html"
-    context_object_name = "pets"
+# # ─────────────────────────────
+# # PETS
+# # ─────────────────────────────
+# class PetListView(ListView):
+#     model = Pet
+#     template_name = "adoption/pet_list.html"
+#     context_object_name = "pets"
 
 
 # class PetDetailView(DetailView):
@@ -113,41 +115,6 @@ class PetListView(ListView):
 #     model = Pet
 #     template_name = "adoption/pet_confirm_delete.html"
 #     success_url = reverse_lazy("pet-list")
-
-
-class PetListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Pet.objects.all()
-    serializer_class = PetSerializer
-
-    def get_queryset(self):
-        queryset = Pet.objects.all()
-
-        species = self.request.query_params.get('species')
-        if species:
-            queryset = queryset.filter(species=species)
-
-        gender = self.request.query_params.get('gender')
-        if gender:
-            queryset = queryset.filter(gender=gender)
-
-        return queryset
-
-
-class PetDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Pet.objects.all()
-    serializer_class = PetSerializer
-
-
-class PetSearchAPIView(generics.ListAPIView):
-    serializer_class = PetSerializer
-
-    def get_queryset(self):
-        query = self.request.GET.get("q")
-
-        if query:
-            return Pet.objects.filter(name__icontains=query)
-
-        return Pet.objects.all()
 
 
 
@@ -210,10 +177,6 @@ class UserSearchView(ListView):
 #     def get_queryset(self):
 #         return Favorite.objects.filter(user=self.request.user).select_related("pet")
     
-class FavoriteAPIView(generics.ListCreateAPIView):
-    queryset = Favorite.objects.all()
-    serializer_class = FavoriteSerializer
-
 
 # ─────────────────────────────
 # ADOPTION APPLICATIONS (optional but recommended)

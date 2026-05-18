@@ -1,10 +1,10 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from . import views
-from .views import PetListCreateAPIView, PetDetailAPIView, PetSearchAPIView 
+
 
 urlpatterns = [
-
+      
     # ── Public ────────────────────────────────────────────────────────────
     path('', views.LandingView.as_view(), name='landing'),
     path('about', views.AboutView.as_view(), name='about'),
@@ -18,12 +18,8 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='register'),
 
     # ── Branches ──────────────────────────────────────────────────────────
-    # path('branches/',                   views.BranchListView.as_view(),   name='branch-list'),
+    path('branches/',                   views.BranchListView.as_view(),   name='branch-list'),
     # path('branches/<int:pk>/',          views.BranchDetailView.as_view(), name='branch-detail'),
-    path('', views.LandingView.as_view(), name='landing'),
-
-    path('branches/',                     views.BranchListView.as_view(),    name='branch-list'),
-    path('branches/<int:pk>/',            views.BranchDetailAPIView.as_view(),  name='branch-detail'),
 
 
     # ── Pets ──────────────────────────────────────────────────────────────
@@ -35,10 +31,6 @@ urlpatterns = [
     # path('pets/<int:pk>/delete/',        views.PetDeleteView.as_view(),        name='pet-delete'),
     # path('pets/<int:pk>/inline-delete/', views.PetInlineDeleteView.as_view(),  name='pet-inline-delete'),
 
-    path('api/pets/',                   PetListCreateAPIView.as_view(),     name='pet-list'),
-    path('api/pets/<int:pk>/',          PetDetailAPIView.as_view(),         name='pet-detail'),
-    path('api/search/',                 PetSearchAPIView.as_view(),      name='api-pet-detail'),
-
     # ── Users ───────────────────────────────────────────────────────────
     path('users/',                       views.UserListView.as_view(),   name='user-list'),
     path('users/add/',                   views.UserCreateView.as_view(), name='user-create'),
@@ -49,6 +41,5 @@ urlpatterns = [
 
     # ── Favorites ──────────────────────────────────────────────────────────
     # path('favorites/',                   views.FavoriteListView.as_view(), name='favorite-list'),
-    path('favorites/',                   views.FavoriteAPIView.as_view(), name='api-favorite-list'),
-
+   
 ]
