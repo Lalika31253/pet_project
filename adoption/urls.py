@@ -66,4 +66,5 @@ urlpatterns = [
     path('branches/', views.BranchListView.as_view(), name='branch-list'),
     path('pets/', views.PetListView.as_view(), name='pet-list'),
     path('lost-pets/', views.LostPetsView.as_view(), name='lost-pets'),
+    path('lost-pets/add/', views.LostPetCreateView.as_view(), name='lost-pet-add'),
 ]

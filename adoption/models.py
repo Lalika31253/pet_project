@@ -25,9 +25,10 @@ class Pet(models.Model):
         ('male', 'Male'),
     ]
 
-    PET_TYPE_CHOICES = [
+    STATUS_CHOICES = [
         ('shelter', 'Shelter'),
-        ('lost', 'Lost/Found'),
+        ('lost', 'Lost'),
+        ('found', "Found")
     ]
 
     name = models.CharField(max_length=100)
@@ -50,16 +51,20 @@ class Pet(models.Model):
     location = models.CharField(max_length=100)
     adoption_status = models.BooleanField(default=True)
 
-    pet_type = models.CharField(
+    pet_status = models.CharField(
         max_length=20,
-        choices=PET_TYPE_CHOICES,
+        choices=STATUS_CHOICES,
         default='shelter'
     )
-    
+
+
+
     branch = models.ForeignKey(
         'Branch',
         on_delete=models.CASCADE,
-        related_name='pets'
+        related_name='pets',
+        null=True,
+        blank=True
     )
 
     def __str__(self):

@@ -1,10 +1,18 @@
 {% extends 'adoption/base.html' %}
 
-{% block title %}Lost Pets{% endblock %}
+{% block title %}Lost & Found{% endblock %}
 
 {% block content %}
 
-<h1>Pets</h1>
+<div class="flex justify-between items-center mb-4">
+
+    <h1 class="text-2xl font-bold">Lost & Found Pets</h1>
+
+    <a href="{% url 'lost-pet-add' %}" class="btn btn-warning">
+      + Add Lost Pet
+    </a>
+
+</div>
 
 <input
   type="search"

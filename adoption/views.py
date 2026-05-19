@@ -6,7 +6,7 @@ from .models import Branch, Pet, User, Favorite, AdoptionApplication
 
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView, LogoutView
-from .forms import RegisterForm
+from .forms import RegisterForm, PetForm
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -20,6 +20,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 from django.views import View
 from django.shortcuts import render, redirect
+from .forms import LostPetForm
 # ─────────────────────────────
 # AUTHENTICATION
 # ─────────────────────────────
@@ -81,7 +82,7 @@ class PetListView(ListView):
     context_object_name = "pets"
 
     def get_queryset(self):
-        return Pet.objects.filter(pet_type='shelter')
+        return Pet.objects.filter(pet_status='shelter')
 
 class LostPetsView(ListView):
     model = Pet
@@ -89,7 +90,29 @@ class LostPetsView(ListView):
     context_object_name = "pets"
 
     def get_queryset(self):
-        return Pet.objects.filter(pet_type='lost')
+        return Pet.objects.filter(pet_status='lost')
+
+
+class LostPetCreateView(LoginRequiredMixin, CreateView):
+    model = Pet
+    form_class = PetForm
+    template_name = "adoption/lost_pet_form.html"
+    success_url = "/lost-pets/"
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.pet_status = "lost"
+        obj.branch = None  
+        obj.save()
+        return super().form_valid(form)
+    
+class LostPetsView(ListView):
+    model = Pet
+    template_name = "adoption/lost_pets.html"
+    context_object_name = "pets"
+
+    def get_queryset(self):
+        return Pet.objects.filter(pet_status='lost')
 
 # # class PetDetailView(DetailView):
 # #     model = Pet
