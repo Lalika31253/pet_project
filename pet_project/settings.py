@@ -123,10 +123,10 @@ STATICFILES_DIRS = [
 
 # Authentication
 # Where to send unauthenticated users who hit a protected page
-LOGIN_URL = '/login/'
+LOGIN_URL = 'login'
 
 # Where to send users after a successful login
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'landing'
 
 # Where to send users after logout
-LOGOUT_REDIRECT_URL = '/login/'
+LOGOUT_REDIRECT_URL = '/'

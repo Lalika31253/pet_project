@@ -13,22 +13,30 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import generics
 
 from django.views.generic import ListView
+from django.http import HttpResponse
+from django.urls import reverse
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
 
-
-
+from django.views import View
+from django.shortcuts import render, redirect
 # ─────────────────────────────
 # AUTHENTICATION
 # ─────────────────────────────
-class RegisterView(CreateView):
-    form_class    = RegisterForm
-    template_name = 'adoption/auth/register.html'
-    success_url   = reverse_lazy('branch-list')
+class RegisterView(View):
 
-    def form_valid(self, form):
-        # Save the user, then log them in immediately
-        response = super().form_valid(form)
-        login(self.request, self.object)
-        return response
+    def get(self, request):
+        form = UserCreationForm()
+        return render(request, "adoption/auth/register.html", {"form": form})
+
+    def post(self, request):
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect("login")
+
+        return render(request, "adoption/auth/register.html", {"form": form})
 
 class LandingView(TemplateView):
     template_name = 'adoption/landing.html'
@@ -79,7 +87,7 @@ class LostPetsView(ListView):
     model = Pet
     template_name = "adoption/lost_pets.html"
     context_object_name = "pets"
-    
+
     def get_queryset(self):
         return Pet.objects.filter(pet_type='lost')
 
@@ -132,10 +140,10 @@ class LostPetsView(ListView):
 # ─────────────────────────────
 # USERS
 # ─────────────────────────────
-class UserListView(LoginRequiredMixin,ListView):
-    model = User
-    template_name = "adoption/user_list.html"
-    context_object_name = "users"
+# class UserListView(LoginRequiredMixin,ListView):
+#     model = User
+#     template_name = "adoption/user_list.html"
+#     context_object_name = "users"
 
 
 # class UserDetailView(LoginRequiredMixin, DetailView):
@@ -174,7 +182,23 @@ class UserListView(LoginRequiredMixin,ListView):
 #         if query:
 #           return User.objects.filter(username__icontains=query) | User.objects.filter(email__icontains=query)
 #         return User.objects.all()
+class CustomLoginView(LoginView):
+    template_name = "adoption/auth/login.html"
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        # HTMX login
+        if self.request.headers.get("HX-Request"):
+            return HttpResponse(
+                status=204,
+                headers={"HX-Redirect": reverse("landing")}
+            )
+
+        return response
+
+    def get_success_url(self):
+        return reverse("landing")
 
 # # ─────────────────────────────
 # # FAVORITES
