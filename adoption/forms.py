@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 class PetForm(forms.ModelForm):
     class Meta:
         model  = Pet
-        fields = ['species', 'gender', 'name', 'age',
+        fields = ['species', 'gender', 'pet_status', 'name', 'age',
                   'breed', 'description', 'image', 'location', 'adoption_status', 'branch']
 
 

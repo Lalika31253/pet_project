@@ -54,7 +54,6 @@ class Pet(models.Model):
     pet_status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default='shelter'
     )
 
 
