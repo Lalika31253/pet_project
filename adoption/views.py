@@ -84,16 +84,6 @@ class PetListView(ListView):
     def get_queryset(self):
         return Pet.objects.filter(pet_status='shelter')
 
-class LostPetsView(ListView):
-    model = Pet
-    template_name = "adoption/lost_pets.html"
-    context_object_name = "pets"
-
-    def get_queryset(self):
-        return Pet.objects.filter(
-            pet_status__in=["lost", "found"]
-        ).order_by("-id")
-
 
 class LostPetCreateView(LoginRequiredMixin, CreateView):
     model = Pet

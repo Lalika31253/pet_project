@@ -1,45 +1,60 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="retro">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Pet Project{% endblock %}</title>
-  <!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Pet Project{% endblock %}</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- DaisyUI (must come after Tailwind) -->
-<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css"
-      rel="stylesheet">
-</head>
-<!-- hx-headers sends the CSRF token with every HTMX request -->
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-<nav>
-  <a href="{% url 'landing' %}">Home</a> |
-  <a href="{% url 'about' %}">About Us</a> |
-  <a href="{% url 'help' %}">Help to animals</a> |
-  <a href="{% url 'pet-list' %}">Animal Adoption</a> |
-  <a href="{% url 'lost-pets' %}">Lost and Found</a> |
+    <!-- DaisyUI (must come after Tailwind) -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css"
+      rel="stylesheet"
+    />
 
-  <span style="margin-left:20px;">
-    {% if user.is_authenticated %}
-        👤 {{ user.username }}
+    <style>
+      /* REMOVE native browser search X */
 
-        <form method="POST" action="{% url 'logout' %}" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
+      input.no-native-clear::-webkit-search-cancel-button {
+        display: none !important;
+        -webkit-appearance: none !important;
+      }
+
+      input.no-native-clear::-ms-clear {
+        display: none !important;
+      }
+
+      input[type="search"] {
+        -moz-appearance: textfield;
+      }
+    </style>
+  </head>
+  <!-- hx-headers sends the CSRF token with every HTMX request -->
+  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <nav>
+      <a href="{% url 'landing' %}">Home</a> |
+      <a href="{% url 'about' %}">About Us</a> |
+      <a href="{% url 'help' %}">Help to animals</a> |
+      <a href="{% url 'pet-list' %}">Animal Adoption</a> |
+      <a href="{% url 'lost-pets' %}">Lost and Found</a> |
+
+      <span style="margin-left: 20px">
+        {% if user.is_authenticated %} 👤 {{ user.username }}
+
+        <form method="POST" action="{% url 'logout' %}" style="display: inline">
+          {% csrf_token %}
+          <button type="submit">Logout</button>
         </form>
 
-    {% else %}
+        {% else %}
         <a href="{% url 'login' %}">Login</a>
-    {% endif %}
-  </span>
-</nav>
-  <hr>
-  <main>
-    {% block content %}{% endblock %}
-  </main>
+        {% endif %}
+      </span>
+    </nav>
+    <hr />
+    <main>{% block content %}{% endblock %}</main>
 
-  
-  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-</body>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  </body>
 </html>

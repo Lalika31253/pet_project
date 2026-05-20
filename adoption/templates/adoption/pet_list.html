@@ -4,20 +4,51 @@
 
 {% block content %}
 
-<h1>All Pets</h1>
+<h1 class="text-2xl font-bold mb-4">All Pets</h1>
 
-<input
+<!-- SEARCH BAR WITH CLEAR BUTTON -->
+<div class="relative w-full max-w-md mb-6">
+
+  <input
+  id="pet-search"
   type="search"
   name="q"
   placeholder="Search pets..."
-  hx-get="/api/pets/search/"
+  autocomplete="off"
+  class="input input-bordered w-full pr-10 no-native-clear"
+  hx-get="/api/pets/adoption-search/"
   hx-trigger="keyup changed delay:300ms"
   hx-target="#pet-results"
   hx-swap="innerHTML"
 />
 
-<div id="pet-results">
-  {% include 'adoption/partials/pet_table.html' %}
+    <!-- CLEAR BUTTON (✕) -->
+    <button
+        type="button"
+        onclick="clearSearch()"
+        class="absolute right-3 top-2 text-gray-500 hover:text-black text-lg"
+    >
+        ✕
+    </button>
+
 </div>
+
+<!-- RESULTS -->
+<div id="pet-results">
+    {% include 'adoption/partials/pet_table.html' %}
+</div>
+
+<!-- JS -->
+<script>
+function clearSearch() {
+    const input = document.getElementById("pet-search");
+
+    // clear text
+    input.value = "";
+
+    // trigger HTMX reload (empty query = all pets)
+    htmx.trigger(input, "keyup");
+}
+</script>
 
 {% endblock %}

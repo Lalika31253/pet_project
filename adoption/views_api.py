@@ -29,7 +29,7 @@ class PetDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Pet.objects.all()
     serializer_class = PetSerializer
 
-
+#for lost/found page
 class PetSearchAPIView(View):
 
     def get(self, request):
@@ -52,6 +52,28 @@ class PetSearchAPIView(View):
             {"pets": pets}
         )
 
+#for adoption page
+class PetAdoptionSearchAPIView(View):
+
+    def get(self, request):
+        query = request.GET.get("q", "")
+
+        pets = Pet.objects.filter(
+            Q(name__icontains=query) |
+            Q(species__icontains=query) |
+            Q(breed__icontains=query) |
+            Q(location__icontains=query) |
+            Q(gender__icontains=query) |
+            Q(pet_status__icontains=query)
+        ).filter(
+            pet_status="shelter"
+        )
+
+        return render(
+            request,
+            "adoption/partials/pet_table.html",
+            {"pets": pets}
+        )
 
 # ───────── BRANCHES ─────────
 class BranchListCreateAPIView(generics.ListCreateAPIView):
