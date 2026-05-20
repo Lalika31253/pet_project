@@ -102,10 +102,7 @@ class LostPetCreateView(LoginRequiredMixin, CreateView):
     success_url = "/lost-pets/"
 
     def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.pet_status = "lost"
-        obj.branch = None  
-        obj.save()
+        form.instance.branch = None
         return super().form_valid(form)
     
 class LostPetsView(ListView):
@@ -138,10 +135,11 @@ class LostPetsView(ListView):
 # #     success_url = reverse_lazy("pet-list")
 
 
-# # class PetDeleteView(LoginRequiredMixin, DeleteView):
-# #     model = Pet
-# #     template_name = "adoption/pet_confirm_delete.html"
-# #     success_url = reverse_lazy("pet-list")
+class PetDeleteView(LoginRequiredMixin, DeleteView):
+    model = Pet
+    template_name = "adoption/pet_confirm_delete.html"
+    success_url = reverse_lazy("lost-pets")
+
 
 
 # # class PetSearchView(ListView):
