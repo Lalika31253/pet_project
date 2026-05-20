@@ -90,7 +90,9 @@ class LostPetsView(ListView):
     context_object_name = "pets"
 
     def get_queryset(self):
-        return Pet.objects.filter(pet_status='lost')
+        return Pet.objects.filter(
+            pet_status__in=["lost", "found"]
+        ).order_by("-id")
 
 
 class LostPetCreateView(LoginRequiredMixin, CreateView):
@@ -114,7 +116,7 @@ class LostPetsView(ListView):
     def get_queryset(self):
         return Pet.objects.filter(
             pet_status__in=['lost', 'found']
-        )
+        ).order_by("-id")
 
 # # class PetDetailView(DetailView):
 # #     model = Pet

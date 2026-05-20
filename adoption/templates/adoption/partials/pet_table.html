@@ -36,8 +36,9 @@
       <th>Name</th>
       <th>Species</th>
       <th>Gender</th>
-      <th>Age</th>
-      <th>Branch</th>
+      <th>Breed</th>
+      <th>Location</th>
+     
   </tr>
 
   {% for pet in pets %}
@@ -45,8 +46,8 @@
       <td>{{ pet.name }}</td>
       <td>{{ pet.species }}</td>
       <td>{{ pet.gender }}</td>
-      <td>{{ pet.age }}</td>
-      <td>{{ pet.branch.name }}</td>
+      <td>{{ pet.breed }}</td>
+      <td>{{ pet.location }}</td>
   </tr>
   {% empty %}
   <tr>

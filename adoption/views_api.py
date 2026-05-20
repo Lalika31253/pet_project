@@ -1,6 +1,10 @@
+from django.shortcuts import render
+from rest_framework.views import APIView
 from rest_framework import generics
 from .models import Pet, Branch, Favorite
 from .serializers import PetSerializer, BranchSerializer, FavoriteSerializer
+from django.db.models import Q
+from django.views import View
 
 
 # ───────── PETS ─────────
@@ -26,14 +30,27 @@ class PetDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PetSerializer
 
 
-class PetSearchAPIView(generics.ListAPIView):
-    serializer_class = PetSerializer
+class PetSearchAPIView(View):
 
-    def get_queryset(self):
-        query = self.request.query_params.get("q")
-        if query:
-            return Pet.objects.filter(name__icontains=query)
-        return Pet.objects.all()
+    def get(self, request):
+        query = request.GET.get("q", "")
+
+        pets = Pet.objects.filter(
+            Q(name__icontains=query) |
+            Q(species__icontains=query) |
+            Q(breed__icontains=query) |
+            Q(location__icontains=query) |
+            Q(gender__icontains=query) |
+            Q(pet_status__icontains=query)
+        ).filter(
+            pet_status__in=["lost", "found"]
+        )
+
+        return render(
+            request,
+            "adoption/partials/lost_pet_table.html",
+            {"pets": pets}
+        )
 
 
 # ───────── BRANCHES ─────────

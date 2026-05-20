@@ -1,23 +1,21 @@
 <table border="1" cellpadding="10">
   <tr>
       <th>Name</th>
+      <th>Status</th>
       <th>Species</th>
-      <th>Gender</th>
-      <th>Age</th>
-      <th>Branch</th>
+      <th>Location</th>
   </tr>
 
   {% for pet in pets %}
   <tr>
       <td>{{ pet.name }}</td>
+      <td>{{ pet.pet_status }}</td>
       <td>{{ pet.species }}</td>
-      <td>{{ pet.gender }}</td>
-      <td>{{ pet.age }}</td>
-      <td>{{ pet.branch.name }}</td>
+      <td>{{ pet.location }}</td>
   </tr>
   {% empty %}
   <tr>
-      <td colspan="5">No pets found.</td>
+      <td colspan="4">No pets found.</td>
   </tr>
   {% endfor %}
 </table>
