@@ -35,7 +35,16 @@ class LostPetForm(forms.ModelForm):
             'breed',
             'species',
             'gender',
+            'pet_status', 
             'description',
             'image',
             'location',
+        ]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # REMOVE shelter option
+        self.fields['pet_status'].choices = [
+            ('lost', 'Lost'),
+            ('found', 'Found'),
         ]

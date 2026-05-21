@@ -87,14 +87,19 @@ class PetListView(ListView):
 
 class LostPetCreateView(LoginRequiredMixin, CreateView):
     model = Pet
-    form_class = PetForm
+    form_class = LostPetForm 
     template_name = "adoption/lost_pet_form.html"
     success_url = "/lost-pets/"
 
     def form_valid(self, form):
-        form.instance.branch = None
+        obj = form.save(commit=False)
+        obj.pet_status = "lost"  
+        obj.branch = None
+        obj.owner = self.request.user
+        obj.save()
         return super().form_valid(form)
-    
+
+
 class LostPetsView(ListView):
     model = Pet
     template_name = "adoption/lost_pets.html"

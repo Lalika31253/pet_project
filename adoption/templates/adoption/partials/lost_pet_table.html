@@ -1,89 +1,88 @@
 <table class="table w-full border rounded-xl overflow-hidden">
-    <thead class="bg-base-200">
-        <tr>
-            <th>Photo</th>
-            <th>Name</th>
-            <th>Status</th>
-            <th>Species</th>
-            <th>Location</th>
-            <th>Description</th>
+  <thead class="bg-base-200">
+    <tr>
+      <th>Photo</th>
+      <th>Name</th>
+      <th>Status</th>
+      <th>Species</th>
+      <th>Location</th>
+      <th>Description</th>
 
-            {% if user.is_authenticated %}
-            <th>Actions</th>
-            {% endif %}
-        </tr>
-    </thead>
+      {% if user.is_authenticated %}
+      <th>Actions</th>
+      {% endif %}
+    </tr>
+  </thead>
 
-    <tbody>
-        {% for pet in pets %}
-        <tr class="hover align-middle">
+  <tbody>
+    {% for pet in pets %}
+    <tr class="hover align-middle">
+      <!-- PHOTO -->
+      <td>
+        {% if pet.image %}
+        <img
+          src="{{ pet.image.url }}"
+          alt="{{ pet.name }}"
+          class="w-24 h-24 object-cover rounded-lg border"
+        />
+        {% else %}
+        <div
+          class="w-24 h-24 bg-base-200 rounded-lg flex items-center justify-center text-sm"
+        >
+          No Image
+        </div>
+        {% endif %}
+      </td>
 
-            <!-- PHOTO -->
-            <td>
-                {% if pet.image %}
-                    <img
-                        src="{{ pet.image.url }}"
-                        alt="{{ pet.name }}"
-                        class="w-24 h-24 object-cover rounded-lg border"
-                    >
-                {% else %}
-                    <div class="w-24 h-24 bg-base-200 rounded-lg flex items-center justify-center text-sm">
-                        No Image
-                    </div>
-                {% endif %}
-            </td>
+      <!-- NAME -->
+      <td class="font-bold text-lg">{{ pet.name }}</td>
 
-            <!-- NAME -->
-            <td class="font-bold text-lg">
-                {{ pet.name }}
-            </td>
+      <!-- STATUS -->
+      <td>
+        {% if pet.pet_status == "lost" %}
+        <span class="badge badge-error"> Lost </span>
+        {% else %}
+        <span class="badge badge-success"> Found </span>
+        {% endif %}
+      </td>
 
-            <!-- STATUS -->
-            <td>
-                {% if pet.pet_status == "lost" %}
-                    <span class="badge badge-error">
-                        Lost
-                    </span>
-                {% else %}
-                    <span class="badge badge-success">
-                        Found
-                    </span>
-                {% endif %}
-            </td>
+      <!-- SPECIES -->
+      <td>{{ pet.species }}</td>
 
-            <!-- SPECIES -->
-            <td>
-                {{ pet.species }}
-            </td>
+      <!-- LOCATION -->
+      <td>{{ pet.location }}</td>
 
-            <!-- LOCATION -->
-            <td>
-                {{ pet.location }}
-            </td>
+      <!-- DESCRIPTION -->
+      <td class="max-w-xs">
+        {{ pet.description|default:"No description provided." }}
+      </td>
 
-            <!-- DESCRIPTION -->
-            <td class="max-w-xs">
-                {{ pet.description|default:"No description provided." }}
-            </td>
+      <!-- DELETE BUTTON -->
+      <td>
+        {% if user.is_authenticated and pet.owner == user %}
+    
+            <a href="{% url 'lost-pet-delete' pet.id %}"
+               class="btn btn-error btn-sm mr-2">
+                Delete
+            </a>
+    
+            <a href="{% url 'lost-pet-update' pet.id %}"
+               class="btn btn-warning btn-sm">
+                Update
+            </a>
+    
+        {% else %}
+            <span class="text-gray-400 text-sm">—</span>
+        {% endif %}
+    </td>
 
-            <!-- DELETE BUTTON -->
-            {% if user.is_authenticated %}
-            <td>
-                <a href="{% url 'lost-pet-delete' pet.id %}"
-                   class="btn btn-error btn-sm">
-                   Delete
-                </a>
-            </td>
-            {% endif %}
+      
 
-        </tr>
 
-        {% empty %}
-        <tr>
-            <td colspan="7" class="text-center py-6">
-                No pets found.
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+    {% empty %}
+    <tr>
+      <td colspan="7" class="text-center py-6">No pets found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
