@@ -4,16 +4,15 @@
 
 {% block content %}
 
-<h1>Report a Lost Pet</h1>
+<h1 class="text-2xl font-bold mb-4">Report a Lost Pet</h1>
 
-<form method="POST" enctype="multipart/form-data">
+<form method="POST" enctype="multipart/form-data" class="space-y-4">
     {% csrf_token %}
     {{ form.as_p }}
 
-    <button type="submit">
+    <button class="btn btn-primary">
         Submit Lost Pet
     </button>
 </form>
-
 
 {% endblock %}
