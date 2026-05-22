@@ -48,6 +48,9 @@ from django.urls import path
 from django.contrib.auth.views import LogoutView, LoginView
 from . import views
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
 
     # Public pages
@@ -70,3 +73,6 @@ urlpatterns = [
     path('lost-pets/<int:pk>/delete/', views.PetDeleteView.as_view(), name='lost-pet-delete'),
     path('lost-pets/<int:pk>/update/', views.LostPetUpdateView.as_view(), name='lost-pet-update'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

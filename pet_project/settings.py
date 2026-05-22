@@ -130,3 +130,6 @@ LOGIN_REDIRECT_URL = 'landing'
 
 # Where to send users after logout
 LOGOUT_REDIRECT_URL = '/'
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"

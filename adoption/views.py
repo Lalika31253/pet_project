@@ -139,12 +139,12 @@ class LostPetUpdateView(LoginRequiredMixin, UpdateView):
         obj = self.get_object()
 
         # only owner can edit
-        if obj.owner != request.user:
+        if obj.created_by != request.user:
             return HttpResponseForbidden()
 
         return super().dispatch(request, *args, **kwargs)
- 
-    
+
+
 class LostPetDeleteView(LoginRequiredMixin, DeleteView):
     model = Pet
     template_name = "adoption/pet_confirm_delete.html"
