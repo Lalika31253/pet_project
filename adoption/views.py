@@ -160,10 +160,15 @@ class LostPetDeleteView(LoginRequiredMixin, DeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 
-# # class PetDetailView(DetailView):
-# #     model = Pet
-# #     template_name = "adoption/pet_detail.html"
-# #     context_object_name = "pet"
+class LostPetDetailView(DetailView):
+    model = Pet
+    template_name = "adoption/lost_pet_detail.html"
+    context_object_name = "pet"
+
+class PetDetailView(DetailView):
+    model = Pet
+    template_name = "adoption/pet_detail.html"
+    context_object_name = "pet"
 
 
 # # class PetCreateView(LoginRequiredMixin, CreateView):
@@ -184,6 +189,8 @@ class PetDeleteView(LoginRequiredMixin, DeleteView):
     model = Pet
     template_name = "adoption/pet_confirm_delete.html"
     success_url = reverse_lazy("lost-pets")
+
+   
 
 
 # # class PetSearchView(ListView):

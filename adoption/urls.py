@@ -72,6 +72,8 @@ urlpatterns = [
     path('lost-pets/add/', views.LostPetCreateView.as_view(), name='lost-pet-add'),
     path('lost-pets/<int:pk>/delete/', views.PetDeleteView.as_view(), name='lost-pet-delete'),
     path('lost-pets/<int:pk>/update/', views.LostPetUpdateView.as_view(), name='lost-pet-update'),
+    path('lost-pets/<int:pk>/detail/', views.LostPetDetailView.as_view(), name='lost-pet-detail'),
+    path('pets/<int:pk>/detail/', views.PetDetailView.as_view(), name='pet-detail'),
 ]
 
 if settings.DEBUG:

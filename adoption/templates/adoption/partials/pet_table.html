@@ -1,36 +1,3 @@
-{% comment %} {# This template renders with NO extends — it is a fragment, not a full page #}
-<table border="1">
-  <tr>
-    <th>Pet</th><th>Year</th><th>Price</th>
-    <th>Branch</th><th>Seller</th><th>Actions</th>
-  </tr>
-  {% for car in cars %}
-    <tr id="pet-{{ pet.pk }}">
-      <td>{{ pet.species }} {{ pet.gender }}</td>
-      <td>{{ pet.name }}</td>
-      <td>{{ pet.age }}</td>
-      <td>{{ pet.breed }}</td>
-      <td>{{ pet.description }}</td>
-      <td>{{ pet.image }}</td>
-      <td>{{ pet.location }}</td>
-      <td>{{ pet.adoption_status }}</td>
-      
-      <td>
-        <a href="{% url 'branch-detail' pet.branch.pk %}">
-          {{ pet.branch.name }}
-        </a>
-      </td>
-     
-      <td>
-        <a href="{% url 'pet-update' pet.pk %}">Edit</a> |
-        <a href="{% url 'pet-delete' pet.pk %}">Delete</a>
-      </td>
-    </tr>
-  {% empty %}
-    <tr><td colspan="6">No pets found.</td></tr>
-  {% endfor %}
-</table> {% endcomment %}
-
 <table border="1" cellpadding="10">
   <tr>
       <th>Name</th>
@@ -43,7 +10,14 @@
 
   {% for pet in pets %}
   <tr>
-      <td>{{ pet.name }}</td>
+    <td>
+      <a
+          href="{% url 'pet-detail' pet.id %}"
+          class="link link-hover"
+      >
+          {{ pet.name }}
+      </a>
+  </td>
       <td>{{ pet.species }}</td>
       <td>{{ pet.gender }}</td>
       <td>{{ pet.breed }}</td>
