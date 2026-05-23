@@ -35,6 +35,8 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 
+from django.utils.decorators import method_decorator
+
 from .utils import get_user_role
 
 User = get_user_model()
@@ -232,6 +234,7 @@ class PetCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.pet_status = "shelter"
+        obj.created_by = self.request.user 
         obj.save()
         return super().form_valid(form)
 
@@ -372,18 +375,25 @@ def toggle_favorite(request, pk):
 #       return AdoptionApplication.objects.select_related("user", "pet")
 
 
-class ProfileView(LoginRequiredMixin, TemplateView):
+@method_decorator(login_required, name="dispatch")
+class ProfileView(TemplateView):
     template_name = "adoption/profile.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         user = self.request.user
+        role = get_user_role(user)
 
-        favorites = Favorite.objects.select_related("pet").filter(user=user)
+        favorites = Favorite.objects.filter(user=user).select_related("pet")
 
-        context["favorites"] = favorites
-        context["user"] = user
+        created_pets = Pet.objects.filter(created_by=user)
+
+        context.update({
+            "role": role,
+            "favorites": favorites,
+            "created_pets": created_pets,
+        })
 
         return context
     

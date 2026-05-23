@@ -33,7 +33,7 @@ class Pet(models.Model):
     CATEGORY_CHOICES = [
         ('cat', 'Cat'),
         ('dog', 'Dog'),
-        ('bird', 'Bird'),
+        
     ]
     GENDER_CHOICES = [
         ('female', 'Female'),
