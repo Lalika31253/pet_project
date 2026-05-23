@@ -1,3 +1,8 @@
+#PetListCreateAPIView(generics.ListCreateAPIView)
+#PetDetailAPIView(generics.RetrieveUpdateDestroyAPIView)
+#BranchListCreateAPIView(generics.ListCreateAPIView)
+#FavoriteAPIView(generics.ListCreateAPIView)
+
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework import generics
@@ -9,8 +14,11 @@ from django.views import View
 from django.http import HttpResponseForbidden
 from .utils import get_user_role
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+
+from django.http import HttpResponseForbidden
+from .forms import PetForm
 
 
 # ───────── PETS ─────────
@@ -31,20 +39,21 @@ class PetListCreateAPIView(generics.ListCreateAPIView):
         return queryset
 
 
-class PetCreateAPIView(LoginRequiredMixin, CreateView):
-    model = Pet
-    fields = "__all__"
-    template_name = "adoption/pet_form.html"
-    success_url = reverse_lazy("pet-list")
+# class PetCreateAPIView(LoginRequiredMixin, CreateView):
+#     model = Pet
+#     fields = "__all__"
+#     template_name = "adoption/pet_form.html"
+#     success_url = reverse_lazy("pet-list")
 
 
-    def dispatch(self, request, *args, **kwargs):
-        role = get_user_role(request.user)
+#     def dispatch(self, request, *args, **kwargs):
+#         role = get_user_role(request.user)
 
-        if role not in ["admin", "staff"]:
-            return HttpResponseForbidden("You are not allowed")
+#         if role not in ["admin", "staff"]:
+#             return HttpResponseForbidden("You are not allowed")
 
-        return super().dispatch(request, *args, **kwargs)
+#         return super().dispatch(request, *args, **kwargs)
+    
 
 
 class PetDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -86,7 +95,7 @@ class PetAdoptionSearchAPIView(View):
         ).filter(pet_status="shelter")
 
         return render(request, "adoption/partials/pet_table.html", {"pets": pets})
-
+    
 
 # ───────── BRANCHES ─────────
 class BranchListCreateAPIView(generics.ListCreateAPIView):

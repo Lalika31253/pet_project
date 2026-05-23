@@ -1,0 +1,21 @@
+{% extends 'adoption/base.html' %}
+
+{% block content %}
+
+<h1 class="text-2xl font-bold mb-4">
+    Delete {{ object.name }}?
+</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <button type="submit" class="btn btn-error">
+        Confirm Delete
+    </button>
+
+    <a href="{% url 'pet-list' %}" class="btn">
+        Cancel
+    </a>
+</form>
+
+{% endblock %}

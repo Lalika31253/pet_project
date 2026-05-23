@@ -1,0 +1,18 @@
+{% extends 'adoption/base.html' %}
+
+{% block title %}Report Pet{% endblock %}
+
+{% block content %}
+
+<h1 class="text-2xl font-bold mb-4">Report a Lost Pet</h1>
+
+<form method="POST" enctype="multipart/form-data" class="space-y-4">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button class="btn btn-primary">
+        Submit Pet
+    </button>
+</form>
+
+{% endblock %}

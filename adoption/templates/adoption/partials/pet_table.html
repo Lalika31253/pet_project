@@ -9,16 +9,16 @@
       <th>Gender</th>
       <th>Breed</th>
       <th>Location</th>
+      <th>Actions</th>
     </tr>
   </thead>
 
-  <!-- BODY -->
   <tbody>
 
     {% for pet in pets %}
     <tr class="hover align-middle">
 
-      <!-- PHOTO + HEART -->
+      <!-- PHOTO + FAVORITE -->
       <td>
         <div class="relative w-20 h-20">
 
@@ -66,11 +66,30 @@
       <!-- LOCATION -->
       <td>{{ pet.location }}</td>
 
+      <!-- ACTIONS -->
+      <td>
+        {% if user.is_superuser %}
+
+          <a href="{% url 'pet-update' pet.id %}"
+             class="btn btn-warning btn-sm">
+            Update
+          </a>
+
+          <a href="{% url 'pet-delete' pet.id %}"
+             class="btn btn-error btn-sm">
+            Delete
+          </a>
+
+        {% else %}
+          <span class="text-gray-400 text-sm">—</span>
+        {% endif %}
+      </td>
+
     </tr>
 
     {% empty %}
     <tr>
-      <td colspan="6" class="text-center py-6">
+      <td colspan="7" class="text-center py-6">
         No pets found.
       </td>
     </tr>
@@ -78,3 +97,13 @@
 
   </tbody>
 </table>
+
+
+<!-- ADD BUTTON (SUPERUSER ONLY) -->
+{% if user.is_superuser or user.role == "shelter" %}
+<div class="flex justify-end mt-4">
+  <a href="{% url 'pet-create' %}" class="btn btn-primary">
+    + Add New Pet
+  </a>
+</div>
+{% endif %}

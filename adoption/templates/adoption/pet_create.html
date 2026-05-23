@@ -1,0 +1,49 @@
+{% extends 'adoption/base.html' %}
+
+{% block title %}Adoped Pet{% endblock %}
+
+{% block content %}
+
+<div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">Shelter Pets</h1>
+
+    <a href="{% url 'pet_create' %}" class="btn btn-warning">
+        + Add Pet
+    </a>
+</div>
+
+<!-- SEARCH -->
+<div class="relative w-full max-w-md mb-6">
+    <input
+        id="lost-search"
+        type="search"
+        name="q"
+        placeholder="Search by name, breed, location..."
+        class="input input-bordered w-full pr-10 no-native-clear"
+        hx-get="/api/pets/search/"
+        hx-trigger="keyup changed delay:300ms"
+        hx-target="#pet-results"
+        hx-swap="innerHTML"
+    />
+
+    <button type="button"
+        onclick="clearLostSearch()"
+        class="absolute right-3 top-2">
+        ✕
+    </button>
+</div>
+
+<!-- RESULTS -->
+<div id="pet-results">
+    {% include 'adoption/partials/pet_table.html' with pets=pets %}
+</div>
+
+<script>
+function clearSearch() {
+    const input = document.getElementById("search");
+    input.value = "";
+    htmx.trigger(input, "keyup");
+}
+</script>
+
+{% endblock %}

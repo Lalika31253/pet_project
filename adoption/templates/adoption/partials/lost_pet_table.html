@@ -56,7 +56,8 @@
   
         <!-- ACTIONS -->
         <td>
-            {% if user.is_authenticated and pet.created_by_id == user.id %}
+            {% if user.is_authenticated %}
+                {% if user.is_superuser or pet.created_by_id == user.id %}
           
               <a href="{% url 'lost-pet-update' pet.id %}"
                  class="btn btn-warning btn-sm mr-2">
@@ -70,6 +71,7 @@
           
             {% else %}
               <span class="text-gray-400 text-sm">—</span>
+                {% endif %}
             {% endif %}
           </td>
   

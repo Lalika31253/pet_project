@@ -200,6 +200,39 @@ class PetDetailView(DetailView):
     context_object_name = "pet"
 
 
+class PetCreateView(LoginRequiredMixin, CreateView):
+    model = Pet
+    form_class = PetForm
+    template_name = "adoption/pet_form.html"
+    success_url = reverse_lazy("pet-list")
+
+    def dispatch(self, request, *args, **kwargs):
+
+        role = get_user_role(request.user)
+
+        if not request.user.is_superuser and role != "shelter":
+            return HttpResponseForbidden("Only shelter staff can add pets.")
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.pet_status = "shelter"
+        obj.save()
+        return super().form_valid(form)
+
+class PetUpdateView(LoginRequiredMixin, UpdateView):
+    model = Pet
+    form_class = PetForm
+    template_name = "adoption/pet_form.html"
+    success_url = reverse_lazy("pet-list")
+
+
+class PetDeleteView(LoginRequiredMixin, DeleteView):
+    model = Pet
+    template_name = "adoption/pet_confirm_delete.html"
+    success_url = reverse_lazy("pet-list")
+
 
 
 # # class PetUpdateView(LoginRequiredMixin, UpdateView):

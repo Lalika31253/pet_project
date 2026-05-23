@@ -75,6 +75,10 @@ urlpatterns = [
     path('lost-pets/<int:pk>/', views.LostPetDetailView.as_view(), name='lost-pet-detail'),
     path('pets/<int:pk>/detail/', views.PetDetailView.as_view(), name='pet-detail'),
     path("pets/<int:pk>/favorite/", views.toggle_favorite, name="toggle-favorite"),
+
+    path('pets/create', views.PetCreateView.as_view(), name='pet-create'),
+    path('pets/<int:pk>/update/', views.PetUpdateView.as_view(), name='pet-update'),
+    path('pets/<int:pk>/delete/', views.PetDeleteView.as_view(), name='pet-delete'),
 ]
 
 if settings.DEBUG:
