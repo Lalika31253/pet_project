@@ -1,0 +1,64 @@
+{% extends 'adoption/base.html' %}
+
+{% block content %}
+
+<div class="max-w-4xl mx-auto">
+
+    <!-- USER INFO -->
+    <div class="bg-base-200 p-6 rounded-xl mb-6">
+        <h1 class="text-3xl font-bold mb-2">
+            {{ user.username }}
+        </h1>
+
+        <p><strong>Email:</strong> {{ user.email|default:"Not provided" }}</p>
+        <p><strong>Joined:</strong> {{ user.date_joined|date:"M d, Y" }}</p>
+    </div>
+
+    <!-- FAVORITES -->
+    <h2 class="text-2xl font-bold mb-4">My Favorites</h2>
+
+    {% if favorites %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            {% for fav in favorites %}
+                <div class="border rounded-xl p-4 flex gap-4 items-center">
+
+                    {% if fav.pet.image %}
+                        <img src="{{ fav.pet.image.url }}"
+                             class="w-20 h-20 object-cover rounded-lg">
+                    {% else %}
+                        <div class="w-20 h-20 bg-base-200 flex items-center justify-center rounded-lg">
+                            No Image
+                        </div>
+                    {% endif %}
+
+                    <div>
+                        <h3 class="font-bold text-lg">
+                            <a href="{% url 'pet-detail' fav.pet.id %}" class="link">
+                                {{ fav.pet.name }}
+                            </a>
+                        </h3>
+
+                        <p class="text-sm text-gray-500">
+                            {{ fav.pet.species }} • {{ fav.pet.location }}
+                        </p>
+
+                        <a href="{% url 'toggle-favorite' fav.pet.id %}"
+                           class="text-red-500 text-sm">
+                            Remove
+                        </a>
+                    </div>
+
+                </div>
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+        <p class="text-gray-500">You don’t have any favorites yet.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -356,3 +356,21 @@ def toggle_favorite(request, pk):
 
 #     def get_queryset(self):
 #       return AdoptionApplication.objects.select_related("user", "pet")
+
+
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = "adoption/profile.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+
+        favorites = Favorite.objects.select_related("pet").filter(user=user)
+
+        context["favorites"] = favorites
+        context["user"] = user
+
+        return context
+    
+    
