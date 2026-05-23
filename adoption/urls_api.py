@@ -23,6 +23,7 @@ urlpatterns = [
 
     # PETS API
     path('pets/', views_api.PetListCreateAPIView.as_view(), name='api-pets'),
+    path('pets/create', views_api.PetCreateAPIView.as_view(), name='api-pet-create'),
     path('pets/<int:pk>/', views_api.PetDetailAPIView.as_view(), name='api-pet-detail'),
     # Adoption search (ONLY shelter pets)
     path('pets/adoption-search/', views_api.PetAdoptionSearchAPIView.as_view(), name='api-adoption-search'),

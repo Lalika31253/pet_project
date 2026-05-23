@@ -33,6 +33,10 @@ from .forms import LostPetForm
 
 
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+
+from .utils import get_user_role
 
 User = get_user_model()
 
@@ -101,6 +105,31 @@ class PetListView(ListView):
 
     def get_queryset(self):
         return Pet.objects.filter(pet_status="shelter")
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.user.is_authenticated:
+            favorites = Favorite.objects.filter(user=self.request.user).values_list("pet_id", flat=True)
+            context["favorite_ids"] = set(favorites)
+        else:
+            context["favorite_ids"] = set()
+
+        return context
+    
+def pet_list(request):
+    pets = Pet.objects.all()
+
+    favorite_ids = []
+    if request.user.is_authenticated:
+        favorite_ids = Favorite.objects.filter(
+            user=request.user
+        ).values_list('pet_id', flat=True)
+
+    return render(request, 'adoption/pet_list.html', {
+        'pets': pets,
+        'favorite_ids': favorite_ids,
+    })
 
 
 class LostPetCreateView(LoginRequiredMixin, CreateView):
@@ -171,11 +200,6 @@ class PetDetailView(DetailView):
     context_object_name = "pet"
 
 
-# # class PetCreateView(LoginRequiredMixin, CreateView):
-# #     model = Pet
-# #     fields = "__all__"
-# #     template_name = "adoption/pet_form.html"
-# #     success_url = reverse_lazy("pet-list")
 
 
 # # class PetUpdateView(LoginRequiredMixin, UpdateView):
@@ -273,18 +297,22 @@ class CustomLoginView(LoginView):
         return reverse("landing")
 
 
-# # ─────────────────────────────
-# # FAVORITES
-# # ─────────────────────────────
-# # class FavoriteListView(LoginRequiredMixin, ListView):
-# #     model = Favorite
-# #     template_name = "adoption/favorite_list.html"
-# #     context_object_name = "favorites"
+# ─────────────────────────────
+# FAVORITES
+# ─────────────────────────────
+@login_required
+def toggle_favorite(request, pk):
+    pet = get_object_or_404(Pet, pk=pk)
 
-# #     def get_queryset(self):
-# #         return Favorite.objects.filter(user=self.request.user).select_related("pet")
+    favorite, created = Favorite.objects.get_or_create(
+        user=request.user,
+        pet=pet
+    )
 
+    if not created:
+        favorite.delete()
 
+    return redirect(request.META.get("HTTP_REFERER", "lost-pets"))
 # # ─────────────────────────────
 # # ADOPTION APPLICATIONS (optional but recommended)
 # # ─────────────────────────────
