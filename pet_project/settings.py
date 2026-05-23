@@ -125,6 +125,13 @@ STATICFILES_DIRS = [
 # Where to send unauthenticated users who hit a protected page
 LOGIN_URL = 'login'
 
+ACCOUNT_EMAIL_REQUIRED = True
+
+AUTHENTICATION_BACKENDS = [
+    'adoption.backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 # Where to send users after a successful login
 LOGIN_REDIRECT_URL = 'landing'
 
