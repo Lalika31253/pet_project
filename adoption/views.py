@@ -242,7 +242,7 @@ class PetDeleteView(LoginRequiredMixin, DeleteView):
 # #     success_url = reverse_lazy("pet-list")
 
 
-class PetDeleteView(LoginRequiredMixin, DeleteView):
+class LostPetDeleteView(LoginRequiredMixin, DeleteView):
     model = Pet
     template_name = "adoption/pet_confirm_delete.html"
     success_url = reverse_lazy("lost-pets")
