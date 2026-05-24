@@ -1,21 +1,46 @@
 {% extends 'adoption/base.html' %}
+{% load static %}
+
+{% block title %}Landing{% endblock %}
 
 {% block content %}
 
-<h1 class="text-2xl font-bold mb-4">
-    Delete {{ object.name }}?
-</h1>
+<div class="max-w-6xl mx-auto p-6">
 
-<form method="post">
-    {% csrf_token %}
+    <h1 class="text-4xl font-bold text-center mb-8">
+        Find Pets Across Canada
+    </h1>
 
-    <button type="submit" class="btn btn-error">
-        Confirm Delete
-    </button>
+    <div class="map-wrapper">
+        {% include 'images/canada_map.svg' %}
+    </div>
 
-    <a href="{% url 'pet-list' %}" class="btn">
-        Cancel
-    </a>
-</form>
+</div>
+
+<script>
+    function goToProvince(province) {
+        window.location.href = `/pets/province/${province}/`;
+    }
+</script>
+
+<style>
+    .province {
+        fill: #cbd5e1;
+        stroke: white;
+        stroke-width: 2;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .province:hover {
+        fill: #facc15;
+    }
+
+    .map-wrapper svg {
+        width: 100%;
+        max-width: 1000px;
+        height: auto;
+    }
+</style>
 
 {% endblock %}

@@ -277,7 +277,28 @@ class LostPetDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "adoption/pet_confirm_delete.html"
     success_url = reverse_lazy("lost-pets")
 
-   
+
+
+class ProvincePetsView(ListView):
+    model = Pet
+    template_name = "adoption/province_pets.html"
+    context_object_name = "pets"
+
+    def get_queryset(self):
+        province = self.kwargs["province"]
+
+        return Pet.objects.filter(
+            branch__province=province,
+            adoption_status="available"
+        )
+
+def province_pets(request, province):
+    pets = Pet.objects.filter(location__icontains=province)
+
+    return render(request, 'adoption/province_pets.html', {
+        'pets': pets,
+        'province': province
+    })  
 
 
 # # class PetSearchView(ListView):

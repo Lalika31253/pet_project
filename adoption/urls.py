@@ -51,6 +51,9 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.urls import path
+from . import views
+
 urlpatterns = [
 
     # Public pages
@@ -82,6 +85,8 @@ urlpatterns = [
 
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path("pets/<int:pk>/toggle-status/", views.toggle_adoption_status, name="pet-toggle-status"),
+
+    path("pets/province/<str:province>/", views.province_pets, name="province-pets"),
 ]
 
 if settings.DEBUG:

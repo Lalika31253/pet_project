@@ -1,4 +1,96 @@
 {% extends 'adoption/base.html' %}
+
+{% block title %}Landing{% endblock %}
+
+{% block content %}
+
+<div class="max-w-6xl mx-auto p-6">
+
+    <h1 class="text-4xl font-bold text-center mb-8">
+        Find Pets Across Canada
+    </h1>
+
+    <!-- TOOLTIP -->
+    <div id="tooltip"></div>
+
+    <!-- REAL SVG MAP -->
+    <div class="map-wrapper">
+        {% include 'images/canada_map.svg' %}
+    </div>
+
+</div>
+
+<script>
+
+function goToProvince(province) {
+    window.location.href = `/pets/province/${province}/`;
+}
+
+const tooltip = document.getElementById('tooltip');
+
+const provinces = document.querySelectorAll('.province');
+
+provinces.forEach(province => {
+
+    province.addEventListener('mousemove', (e) => {
+
+        tooltip.style.display = 'block';
+
+        tooltip.innerHTML =
+            province.id.charAt(0).toUpperCase() +
+            province.id.slice(1);
+
+        tooltip.style.left = e.pageX + 15 + 'px';
+        tooltip.style.top = e.pageY + 15 + 'px';
+    });
+
+    province.addEventListener('mouseleave', () => {
+        tooltip.style.display = 'none';
+    });
+
+});
+
+</script>
+
+<style>
+
+.map-wrapper svg {
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
+}
+
+.province {
+    fill: #cbd5e1;
+    stroke: white;
+    stroke-width: 1.5;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.province:hover {
+    fill: #facc15;
+}
+
+#tooltip {
+    position: absolute;
+    display: none;
+    background: black;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    pointer-events: none;
+    z-index: 9999;
+    font-size: 14px;
+}
+
+</style>
+
+{% endblock %}
+
+
+
+{% comment %} {% extends 'adoption/base.html' %}
 {% load static %}
 
 {% block title %}Landing{% endblock %}
@@ -11,3 +103,6 @@
      style="width:100%; height:auto; display:block;">
 
 {% endblock %}
+
+
+ {% endcomment %}

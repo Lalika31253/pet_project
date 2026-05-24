@@ -5,11 +5,30 @@ User = get_user_model()
 
 
 class Branch(models.Model):
+    PROVINCE_CHOICES = [
+        ("AB", "Alberta"),
+        ("BC", "British Columbia"),
+        ("ON", "Ontario"),
+        ("QC", "Quebec"),
+        ("MB", "Manitoba"),
+        ("SK", "Saskatchewan"),
+        ("NS", "Nova Scotia"),
+        ("NB", "New Brunswick"),
+        ("NL", "Newfoundland and Labrador"),
+        ("PE", "Prince Edward Island"),
+    ]
+
+
     name = models.CharField(max_length=100)
     city = models.CharField(max_length=80)
+    province = models.CharField(
+        max_length=10,
+        choices=PROVINCE_CHOICES,
+        default="AB"
+    )
     address = models.CharField(max_length=200)
     phone = models.CharField(max_length=20)
-    opened_date = models.DateField()
+    
     notes = models.TextField(blank=True)
 
     def __str__(self):

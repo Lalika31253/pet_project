@@ -1,0 +1,19 @@
+{% extends 'adoption/base.html' %}
+
+{% block content %}
+
+<h1 class="text-3xl font-bold mb-4">
+    Pets in {{ province|title }}
+</h1>
+
+{% if pets %}
+    <ul>
+        {% for pet in pets %}
+            <li>{{ pet.name }} - {{ pet.breed }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No pets found in this province.</p>
+{% endif %}
+
+{% endblock %}
