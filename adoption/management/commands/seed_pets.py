@@ -1,30 +1,97 @@
 #to run python manage.py seed_pets
 
+
 from django.core.management.base import BaseCommand
-from adoption.models import Pet
+from adoption.models import Pet, Branch
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 
 class Command(BaseCommand):
-    def handle(self, *args, **kwargs):
-        Pet.objects.all().delete()
+    help = "Seed database with sample branches and pets"
 
-        pets = [
-            ("Buddy", "available"),
-            ("Luna", "pending"),
-            ("Max", "adopted"),
-            ("Kiwi", "available"),
+    def handle(self, *args, **kwargs):
+        self.stdout.write("Seeding data...")
+
+        Pet.objects.all().delete()
+        Branch.objects.all().delete()
+
+        user = User.objects.first()
+
+        if not user:
+            self.stdout.write(self.style.ERROR("No user found! Create superuser first."))
+            return
+
+        # -----------------------------
+        # 1. CREATE BRANCHES FIRST
+        # -----------------------------
+        branches = [
+            Branch.objects.create(
+                name="Edmonton Central",
+                city="Edmonton",
+                province="AB",
+                address="Downtown Edmonton",
+                phone="123456"
+            ),
+            Branch.objects.create(
+                name="Calgary West",
+                city="Calgary",
+                province="AB",
+                address="West Calgary",
+                phone="123456"
+            ),
+            Branch.objects.create(
+                name="Vancouver Branch",
+                city="Vancouver",
+                province="BC",
+                address="Downtown Vancouver",
+                phone="123456"
+            ),
         ]
 
-        for name, status in pets:
-            Pet.objects.create(
-                name=name,
-                age=2,
-                breed="Test Breed",
+        # -----------------------------
+        # 2. CREATE PETS
+        # -----------------------------
+        pets = [
+            Pet(
+                name="Buddy",
+                age=3,
+                breed="Golden Retriever",
                 species="dog",
                 gender="male",
-                description="Seed pet",
-                location="Edmonton",
-                adoption_status=status,
+                description="Friendly dog",
                 pet_status="shelter",
-            )
+                adoption_status="available",
+                branch=branches[0],
+                created_by=user,
+            ),
+            Pet(
+                name="Mittens",
+                age=2,
+                breed="Tabby",
+                species="cat",
+                gender="female",
+                description="Small cat",
+                pet_status="shelter",
+                adoption_status="available",
+                branch=branches[1],
+                created_by=user,
+            ),
+            Pet(
+                name="Rocky",
+                age=4,
+                breed="Husky",
+                species="dog",
+                gender="male",
+                description="Strong husky",
+                pet_status="shelter",
+                adoption_status="available",
+                branch=branches[2],
+                created_by=user,
+            ),
+        ]
 
-        self.stdout.write(self.style.SUCCESS("Seed data created ✔"))
+        Pet.objects.bulk_create(pets)
+
+        self.stdout.write(self.style.SUCCESS("Seeding completed!"))

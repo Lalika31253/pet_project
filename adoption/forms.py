@@ -1,5 +1,5 @@
 from django import forms
-from .models import Pet, User as CustomUser
+from .models import Pet, User as CustomUser, Branch
 
 # Authentication
 from django.contrib.auth.forms import UserCreationForm
@@ -10,7 +10,7 @@ class PetForm(forms.ModelForm):
     class Meta:
         model  = Pet
         fields = ['species', 'gender', 'pet_status', 'name', 'age',
-                  'breed', 'description', 'image', 'location', 'adoption_status', 'branch']
+                  'breed', 'description', 'adoption_status', 'branch']
 
 
 class UserForm(forms.ModelForm):
@@ -47,7 +47,7 @@ class LostPetForm(forms.ModelForm):
         model = Pet
         fields = [
             "name", "age", "breed", "species", "gender",
-            "description", "image", "location",
+            "description",
             "pet_status", "adoption_status",
             "branch",
     ]
@@ -60,5 +60,10 @@ class LostPetForm(forms.ModelForm):
             ('lost', 'Lost'),
             ('found', 'Found'),
         ]
+
+class BranchForm(forms.ModelForm):
+    class Meta:
+        model = Branch
+        fields = ["name", "city", "province", "address", "phone", "notes"]
 
     

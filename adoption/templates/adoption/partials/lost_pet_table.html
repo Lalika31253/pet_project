@@ -17,23 +17,31 @@
   
         <!-- PHOTO -->
         <td>
-          {% if pet.image %}
-            <img src="{{ pet.image.url }}" class="w-24 h-24 object-cover rounded-lg border">
-          {% else %}
-            <div class="w-24 h-24 bg-base-200 flex items-center justify-center">
-              No Image
-            </div>
-          {% endif %}
+          <div class="relative w-20 h-20">
+  
+            {% if pet.images.first %}
+  
+              <img
+                src="{{ pet.images.first.image.url }}"
+                class="w-20 h-20 object-cover rounded-lg"
+              />
+  
+            {% else %}
+  
+              <div class="w-20 h-20 bg-base-200 flex items-center justify-center rounded-lg text-xs">
+                No Image
+              </div>
+  
+            {% endif %}
+  
+          </div>
         </td>
   
         <!-- NAME -->
         <td class="font-bold text-lg">
-            <a
-                href="{% url 'lost-pet-detail' pet.id %}"
-                class="link link-hover"
-            >
-                {{ pet.name }} 
-            </a>
+          <a href="{% url 'lost-pet-detail' pet.id %}" class="link link-hover">
+            {{ pet.name }}
+          </a>
         </td>
   
         <!-- STATUS -->
@@ -52,28 +60,36 @@
         <td>{{ pet.location }}</td>
   
         <!-- DESCRIPTION -->
-        <td>{{ pet.description|default:"No description provided." }}</td>
+        <td>
+          {{ pet.description|default:"No description provided." }}
+        </td>
   
         <!-- ACTIONS -->
         <td>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or pet.created_by_id == user.id %}
-          
-              <a href="{% url 'lost-pet-update' pet.id %}"
-                 class="btn btn-warning btn-sm mr-2">
+          {% if user.is_authenticated %}
+  
+            {% if user.is_superuser or pet.created_by_id == user.id %}
+  
+              <a
+                href="{% url 'lost-pet-update' pet.id %}"
+                class="btn btn-warning btn-sm mr-2"
+              >
                 Update
               </a>
-          
-              <a href="{% url 'lost-pet-delete' pet.id %}"
-                 class="btn btn-error btn-sm">
+  
+              <a
+                href="{% url 'lost-pet-delete' pet.id %}"
+                class="btn btn-error btn-sm"
+              >
                 Delete
               </a>
-          
+  
             {% else %}
               <span class="text-gray-400 text-sm">—</span>
-                {% endif %}
             {% endif %}
-          </td>
+  
+          {% endif %}
+        </td>
   
       </tr>
   

@@ -16,15 +16,17 @@ class Branch(models.Model):
         ("NB", "New Brunswick"),
         ("NL", "Newfoundland and Labrador"),
         ("PE", "Prince Edward Island"),
+        ("NT", "Northwest Territories"),
+        ("NU", "Nunavut"),
+        ("YT", "Yukon"),
     ]
 
 
     name = models.CharField(max_length=100)
     city = models.CharField(max_length=80)
     province = models.CharField(
-        max_length=10,
-        choices=PROVINCE_CHOICES,
-        default="AB"
+        max_length=2,
+        choices=PROVINCE_CHOICES
     )
     address = models.CharField(max_length=200)
     phone = models.CharField(max_length=20)
@@ -32,7 +34,7 @@ class Branch(models.Model):
     notes = models.TextField(blank=True)
 
     def __str__(self):
-        return f'{self.name} ({self.city})'
+        return f'{self.name} ({self.province})'
 
 
 # class User(models.Model):
@@ -83,12 +85,6 @@ class Pet(models.Model):
         choices=GENDER_CHOICES
     )
     description = models.TextField(blank=True)
-    image = models.ImageField(
-        upload_to='pets/',
-        blank=True,
-        null=True
-    )
-    location = models.CharField(max_length=100)
 
     adoption_status = models.CharField(
         max_length=20,
@@ -119,7 +115,16 @@ class Pet(models.Model):
 
     def __str__(self):
         return self.name
+    
 
+
+class PetImage(models.Model):
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to="pets/")
+
+    def __str__(self):
+        return f"{self.pet.name} image"
+   
 
 
 class AdoptionApplication(models.Model):

@@ -293,13 +293,15 @@ class ProvincePetsView(ListView):
         )
 
 def province_pets(request, province):
-    pets = Pet.objects.filter(location__icontains=province)
+    pets = Pet.objects.filter(
+        branch__province=province,
+        adoption_status="available"
+    )
 
-    return render(request, 'adoption/province_pets.html', {
-        'pets': pets,
-        'province': province
-    })  
-
+    return render(request, "adoption/province_pets.html", {
+        "pets": pets,
+        "province": province
+    })
 
 # # class PetSearchView(ListView):
 # #     model = Pet
