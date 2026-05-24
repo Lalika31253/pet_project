@@ -238,11 +238,24 @@ class PetCreateView(LoginRequiredMixin, CreateView):
         obj.save()
         return super().form_valid(form)
 
+
 class PetUpdateView(LoginRequiredMixin, UpdateView):
     model = Pet
     form_class = PetForm
     template_name = "adoption/pet_form.html"
     success_url = reverse_lazy("pet-list")
+
+    def dispatch(self, request, *args, **kwargs):
+        role = get_user_role(request.user)
+
+        if not request.user.is_superuser and role != "shelter":
+            return HttpResponseForbidden("Only shelter staff can update pets.")
+
+        return super().dispatch(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        print("DEBUG STATUS:", form.cleaned_data.get("adoption_status"))
+        return super().form_valid(form)
 
 
 class PetDeleteView(LoginRequiredMixin, DeleteView):
@@ -397,3 +410,23 @@ class ProfileView(TemplateView):
 
         return context
     
+    
+@login_required
+def toggle_adoption_status(request, pk):
+    pet = get_object_or_404(Pet, pk=pk)
+
+    role = get_user_role(request.user)
+
+    if not (request.user.is_superuser or role == "shelter"):
+        return HttpResponseForbidden("Not allowed")
+
+    # TOGGLE LOGIC
+    if pet.adoption_status == "available":
+        pet.adoption_status = "pending"
+    elif pet.adoption_status == "pending":
+        pet.adoption_status = "adopted"
+    else:
+        pet.adoption_status = "available"
+
+    pet.save()
+    return redirect("pet-list")

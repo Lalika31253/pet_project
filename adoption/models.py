@@ -46,6 +46,12 @@ class Pet(models.Model):
         ('found', "Found")
     ]
 
+    ADOPTION_STATUS_CHOICES = [
+        ("available", "Available"),
+        ("pending", "Pending"),
+        ("adopted", "Adopted"),
+]
+
     name = models.CharField(max_length=100)
     age = models.IntegerField()
     breed = models.CharField(max_length=100)
@@ -64,7 +70,12 @@ class Pet(models.Model):
         null=True
     )
     location = models.CharField(max_length=100)
-    adoption_status = models.BooleanField(default=True)
+
+    adoption_status = models.CharField(
+        max_length=20,
+        choices=ADOPTION_STATUS_CHOICES,
+        default='available'
+    )
 
     pet_status = models.CharField(
         max_length=20,
@@ -76,7 +87,7 @@ class Pet(models.Model):
         on_delete=models.CASCADE,
         related_name='pets',
         null=True,
-        blank=True
+        blank=True,
     )
 
     created_by = models.ForeignKey(

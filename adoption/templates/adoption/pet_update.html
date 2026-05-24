@@ -1,0 +1,30 @@
+{% comment %} {% extends 'adoption/base.html' %}
+
+{% block content %}
+
+<h1 class="text-2xl font-bold mb-4">Update Pet</h1>
+
+<form method="POST" enctype="multipart/form-data" class="space-y-4">
+    {% csrf_token %}
+
+    <div>
+        <label class="font-bold">Name</label>
+        {{ form.name }}
+    </div>
+
+    <div>
+        <label class="font-bold">Adoption Status</label>
+        {{ form.adoption_status }}
+    </div>
+
+    <div>
+        <label class="font-bold">Pet Status</label>
+        {{ form.pet_status }}
+    </div>
+
+    <button class="btn btn-primary">
+        Save Changes
+    </button>
+</form>
+
+{% endblock %} {% endcomment %}

@@ -68,20 +68,39 @@
 
       <!-- ACTIONS -->
       <td>
-        {% if user.is_superuser %}
-
-          <a href="{% url 'pet-update' pet.id %}"
-             class="btn btn-warning btn-sm">
-            Update
-          </a>
-
-          <a href="{% url 'pet-delete' pet.id %}"
-             class="btn btn-error btn-sm">
-            Delete
-          </a>
-
+        {% if user.is_superuser or user.is_staff or user.role == "shelter" %}
+      
+            {% if pet.adoption_status == "available" %}
+                <span class="text-blue-600 font-bold text-sm">Available</span>
+      
+            {% elif pet.adoption_status == "pending" %}
+                <span class="text-yellow-600 font-bold text-sm">Pending</span>
+      
+            {% else %}
+                <span class="text-green-600 font-bold text-sm">Adopted</span>
+            {% endif %}
+      
+            <div class="flex gap-2 mt-2">
+      
+                {% comment %} <a href="{% url 'pet-toggle-status' pet.id %}"
+                   class="btn btn-sm btn-primary">
+                    Change Status
+                </a> {% endcomment %}
+      
+                <a href="{% url 'pet-update' pet.id %}"
+                   class="btn btn-sm btn-warning">
+                    Edit
+                </a>
+      
+                <a href="{% url 'pet-delete' pet.id %}"
+                   class="btn btn-sm btn-error">
+                    Delete
+                </a>
+      
+            </div>
+      
         {% else %}
-          <span class="text-gray-400 text-sm">—</span>
+            <span class="text-gray-400 text-sm">No access</span>
         {% endif %}
       </td>
 

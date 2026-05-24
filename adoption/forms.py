@@ -46,16 +46,12 @@ class LostPetForm(forms.ModelForm):
     class Meta:
         model = Pet
         fields = [
-            'name',
-            'age',
-            'breed',
-            'species',
-            'gender',
-            'pet_status', 
-            'description',
-            'image',
-            'location',
-        ]
+            "name", "age", "breed", "species", "gender",
+            "description", "image", "location",
+            "pet_status", "adoption_status",
+            "branch",
+    ]
+ 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -64,3 +60,5 @@ class LostPetForm(forms.ModelForm):
             ('lost', 'Lost'),
             ('found', 'Found'),
         ]
+
+    
