@@ -68,41 +68,50 @@
 
       <!-- ACTIONS -->
       <td>
+
+        <!-- STATUS (VISIBLE TO ALL USERS) -->
+        {% if pet.adoption_status == "available" %}
+            <span class="px-2 py-1 text-xs font-bold rounded bg-blue-100 text-blue-700">
+                Available
+            </span>
+    
+        {% elif pet.adoption_status == "pending" %}
+            <span class="px-2 py-1 text-xs font-bold rounded bg-yellow-100 text-yellow-700">
+                Pending
+            </span>
+    
+        {% elif pet.adoption_status == "adopted" %}
+            <span class="px-2 py-1 text-xs font-bold rounded bg-green-100 text-green-700">
+                Adopted
+            </span>
+        {% endif %}
+    
+    
+        <!-- ADMIN / SHELTER ACTIONS -->
         {% if user.is_superuser or user.is_staff or user.role == "shelter" %}
-      
-            {% if pet.adoption_status == "available" %}
-                <span class="text-blue-600 font-bold text-sm">Available</span>
-      
-            {% elif pet.adoption_status == "pending" %}
-                <span class="text-yellow-600 font-bold text-sm">Pending</span>
-      
-            {% else %}
-                <span class="text-green-600 font-bold text-sm">Adopted</span>
-            {% endif %}
-      
-            <div class="flex gap-2 mt-2">
-      
-                {% comment %} <a href="{% url 'pet-toggle-status' pet.id %}"
-                   class="btn btn-sm btn-primary">
-                    Change Status
-                </a> {% endcomment %}
-      
+    
+            <div class="mt-2 flex gap-2">
+    
                 <a href="{% url 'pet-update' pet.id %}"
-                   class="btn btn-sm btn-warning">
-                    Edit
+                   class="btn btn-xs btn-warning">
+                    Update
                 </a>
-      
+    
                 <a href="{% url 'pet-delete' pet.id %}"
-                   class="btn btn-sm btn-error">
+                   class="btn btn-xs btn-error">
                     Delete
                 </a>
-      
+    
+                {% comment %} <a href="{% url 'pet-toggle-status' pet.id %}"
+                   class="btn btn-xs btn-primary">
+                    Change Status
+                </a> {% endcomment %}
+    
             </div>
-      
-        {% else %}
-            <span class="text-gray-400 text-sm">No access</span>
+    
         {% endif %}
-      </td>
+    
+    </td>
 
     </tr>
 
