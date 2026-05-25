@@ -87,6 +87,8 @@ urlpatterns = [
     path("pets/<int:pk>/toggle-status/", views.toggle_adoption_status, name="pet-toggle-status"),
 
     path("pets/province/<str:province>/", views.province_pets, name="province-pets"),
+    path("cities/", views.cities_by_province, name="cities-by-province"),
+
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,7 @@
+<option value="">Select City</option>
+
+{% for city in cities %}
+  <option value="{{ city.id }}">{{ city.name }}</option>
+{% empty %}
+  <option disabled>No cities found</option>
+{% endfor %}

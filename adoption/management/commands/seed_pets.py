@@ -1,97 +1,81 @@
 #to run python manage.py seed_pets
 
-
 from django.core.management.base import BaseCommand
-from adoption.models import Pet, Branch
 from django.contrib.auth import get_user_model
+
+from adoption.models import Province, City, Branch, Pet, PetImage
+
+import random
 
 User = get_user_model()
 
 
+CITY_DATA = {
+    "AB": ["Edmonton", "Calgary", "Red Deer"],
+    "BC": ["Vancouver", "Victoria", "Surrey"],
+    "ON": ["Toronto", "Ottawa", "London"],
+    "QC": ["Montreal", "Quebec City", "Laval"],
+    "MB": ["Winnipeg", "Brandon"],
+    "SK": ["Regina", "Saskatoon"],
+    "NS": ["Halifax"],
+    "NB": ["Fredericton", "Moncton"],
+    "NL": ["St. John's"],
+    "PE": ["Charlottetown"],
+    "NT": ["Yellowknife"],
+    "NU": ["Iqaluit"],
+    "YT": ["Whitehorse"],
+}
+
+
+PET_NAMES = ["Max", "Luna", "Bella", "Charlie", "Rocky", "Milo", "Lucy", "Daisy"]
+BREEDS = ["Labrador", "Husky", "Persian Cat", "Bulldog", "Beagle", "Golden Retriever"]
+
+
 class Command(BaseCommand):
-    help = "Seed database with sample branches and pets"
+    help = "Seed full system: provinces, cities, branches, pets"
 
     def handle(self, *args, **kwargs):
-        self.stdout.write("Seeding data...")
 
-        Pet.objects.all().delete()
-        Branch.objects.all().delete()
+        self.stdout.write("🌱 Seeding started...")
 
-        user = User.objects.first()
+        # Create demo user (owner of pets)
+        user, _ = User.objects.get_or_create(
+            username="demo",
+            defaults={"email": "demo@test.com"}
+        )
 
-        if not user:
-            self.stdout.write(self.style.ERROR("No user found! Create superuser first."))
-            return
+        for code, cities in CITY_DATA.items():
 
-        # -----------------------------
-        # 1. CREATE BRANCHES FIRST
-        # -----------------------------
-        branches = [
-            Branch.objects.create(
-                name="Edmonton Central",
-                city="Edmonton",
-                province="AB",
-                address="Downtown Edmonton",
-                phone="123456"
-            ),
-            Branch.objects.create(
-                name="Calgary West",
-                city="Calgary",
-                province="AB",
-                address="West Calgary",
-                phone="123456"
-            ),
-            Branch.objects.create(
-                name="Vancouver Branch",
-                city="Vancouver",
-                province="BC",
-                address="Downtown Vancouver",
-                phone="123456"
-            ),
-        ]
+            province, _ = Province.objects.get_or_create(code=code)
 
-        # -----------------------------
-        # 2. CREATE PETS
-        # -----------------------------
-        pets = [
-            Pet(
-                name="Buddy",
-                age=3,
-                breed="Golden Retriever",
-                species="dog",
-                gender="male",
-                description="Friendly dog",
-                pet_status="shelter",
-                adoption_status="available",
-                branch=branches[0],
-                created_by=user,
-            ),
-            Pet(
-                name="Mittens",
-                age=2,
-                breed="Tabby",
-                species="cat",
-                gender="female",
-                description="Small cat",
-                pet_status="shelter",
-                adoption_status="available",
-                branch=branches[1],
-                created_by=user,
-            ),
-            Pet(
-                name="Rocky",
-                age=4,
-                breed="Husky",
-                species="dog",
-                gender="male",
-                description="Strong husky",
-                pet_status="shelter",
-                adoption_status="available",
-                branch=branches[2],
-                created_by=user,
-            ),
-        ]
+            for city_name in cities:
 
-        Pet.objects.bulk_create(pets)
+                city, _ = City.objects.get_or_create(
+                    name=city_name,
+                    province=province
+                )
 
-        self.stdout.write(self.style.SUCCESS("Seeding completed!"))
+                branch, _ = Branch.objects.get_or_create(
+                    name=city_name,
+                    city=city,
+                    address=f"{city_name} Center",
+                    phone="000-000-0000"
+                )
+
+                # 🔥 CREATE PETS PER BRANCH
+                for i in range(2):  # 2 pets per branch
+
+                    pet = Pet.objects.create(
+                        name=random.choice(PET_NAMES),
+                        age=random.randint(1, 12),
+                        breed=random.choice(BREEDS),
+                        species=random.choice(["cat", "dog"]),
+                        gender=random.choice(["male", "female"]),
+                        description="Auto-generated test pet",
+                        adoption_status="available",
+                        pet_status="shelter",
+                        branch=branch,
+                        created_by=user,
+                    )
+
+        self.stdout.write(self.style.SUCCESS("✅ FULL SEED COMPLETE"))

@@ -6,11 +6,15 @@ from django.views.generic import (
     DeleteView,
     TemplateView,
 )
+
+from django.forms import modelformset_factory
+from .models import City, Branch, Pet, PetImage
+
 from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
 
-from .models import Branch, Pet, User, Favorite, AdoptionApplication
+from .models import Branch, Pet, Favorite, PetImage, City
 
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView, LogoutView
@@ -38,6 +42,14 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 from .utils import get_user_role
+
+from django.forms import modelformset_factory
+
+from django.template.loader import render_to_string
+
+from .models import PetImage
+from .forms import PetForm, PetImageForm
+
 
 User = get_user_model()
 
@@ -96,20 +108,6 @@ class BranchListView(ListView):
     context_object_name = "branches"
 
 
-# # # class BranchDetailView(DetailView):
-# # #     model = Branch
-# # #     template_name = "adoption/branch_detail.html"
-# # #     context_object_name = "branch"
-
-# # class BranchListCreateAPIView(generics.ListCreateAPIView):
-# #     queryset = Branch.objects.all()
-# #     serializer_class = BranchSerializer
-
-
-# # class BranchDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-# #     queryset = Branch.objects.all()
-# #     serializer_class = BranchSerializer
-
 
 # ─────────────────────────────
 # PETS
@@ -125,6 +123,7 @@ class PetListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        context["cities"] = City.objects.all() 
         if self.request.user.is_authenticated:
             favorites = Favorite.objects.filter(user=self.request.user).values_list("pet_id", flat=True)
             context["favorite_ids"] = set(favorites)
@@ -222,21 +221,61 @@ class PetCreateView(LoginRequiredMixin, CreateView):
     template_name = "adoption/pet_form.html"
     success_url = reverse_lazy("pet-list")
 
-    def dispatch(self, request, *args, **kwargs):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-        role = get_user_role(request.user)
+        PetImageFormSet = modelformset_factory(
+            PetImage,
+            fields=("image",),
+            extra=3
+        )
 
-        if not request.user.is_superuser and role != "shelter":
-            return HttpResponseForbidden("Only shelter staff can add pets.")
+        if self.request.POST:
+            context["formset"] = PetImageFormSet(
+                self.request.POST,
+                self.request.FILES,
+                queryset=PetImage.objects.none()
+            )
+        else:
+            context["formset"] = PetImageFormSet(
+                queryset=PetImage.objects.none()
+            )
 
-        return super().dispatch(request, *args, **kwargs)
+        return context
 
     def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.pet_status = "shelter"
-        obj.created_by = self.request.user 
-        obj.save()
-        return super().form_valid(form)
+
+        context = self.get_context_data()
+        formset = context["formset"]
+
+        # SAVE PET
+        self.object = form.save()
+
+        # SAVE IMAGES
+        if formset.is_valid():
+
+            for f in formset:
+
+                if f.cleaned_data:
+
+                    image = f.save(commit=False)
+                    image.pet = self.object
+                    image.save()
+
+        return redirect(self.success_url)
+
+
+def cities_by_province(request):
+    province = request.GET.get("province")
+
+    cities = City.objects.filter(province=province)
+
+    html = render_to_string(
+        "adoption/city_options.html",
+        {"cities": cities}
+    )
+    return HttpResponse(html)
+
 
 
 class PetUpdateView(LoginRequiredMixin, UpdateView):
@@ -252,10 +291,48 @@ class PetUpdateView(LoginRequiredMixin, UpdateView):
             return HttpResponseForbidden("Only shelter staff can update pets.")
 
         return super().dispatch(request, *args, **kwargs)
-    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        PetImageFormSet = modelformset_factory(
+            PetImage,
+            fields=("image",),
+            extra=3,
+            can_delete=True
+        )
+
+        if self.request.POST:
+            context["formset"] = PetImageFormSet(
+                self.request.POST,
+                self.request.FILES,
+                queryset=PetImage.objects.filter(pet=self.object)
+            )
+        else:
+            context["formset"] = PetImageFormSet(
+                queryset=PetImage.objects.filter(pet=self.object)
+            )
+
+        return context
+
     def form_valid(self, form):
-        print("DEBUG STATUS:", form.cleaned_data.get("adoption_status"))
+        self.object = form.save()
+
+        context = self.get_context_data()
+        formset = context["formset"]
+
+        if formset.is_valid():
+            images = formset.save(commit=False)
+
+            for img in images:
+                img.pet = self.object
+                img.save()
+
+            for obj in formset.deleted_objects:
+                obj.delete()
+
         return super().form_valid(form)
+
 
 
 class PetDeleteView(LoginRequiredMixin, DeleteView):
@@ -294,7 +371,7 @@ class ProvincePetsView(ListView):
 
 def province_pets(request, province):
     pets = Pet.objects.filter(
-        branch__province=province,
+        branch__city__province__code=province,
         adoption_status="available"
     )
 
@@ -303,70 +380,10 @@ def province_pets(request, province):
         "province": province
     })
 
-# # class PetSearchView(ListView):
-# #     model = Pet
-# #     template_name = "adoption/pet_list.html"
-# #     context_object_name = "pets"
-
-# #     def get_queryset(self):
-# #         query = self.request.GET.get("q")
-# #         if query:
-# #             return Pet.objects.filter(name__icontains=query)
-# #         return Pet.objects.all()
 
 
-# # class PetInlineDeleteView(LoginRequiredMixin, DeleteView):
-# #     model = Pet
-# #     template_name = "adoption/pet_confirm_delete.html"
-# #     success_url = reverse_lazy("pet-list")
 
 
-# ─────────────────────────────
-# USERS
-# ─────────────────────────────
-# class UserListView(LoginRequiredMixin,ListView):
-#     model = User
-#     template_name = "adoption/user_list.html"
-#     context_object_name = "users"
-
-
-# class UserDetailView(LoginRequiredMixin, DetailView):
-#     model = User
-#     template_name = "adoption/user_detail.html"
-#     context_object_name = "user"
-
-
-# class UserCreateView(LoginRequiredMixin, CreateView):
-#     model = User
-#     fields = "__all__"
-#     template_name = "adoption/user_form.html"
-#     success_url = reverse_lazy("user-list")
-
-
-# class UserUpdateView(LoginRequiredMixin, UpdateView):
-#     model = User
-#     fields = "__all__"
-#     template_name = "adoption/user_form.html"
-#     success_url = reverse_lazy("user-list")
-
-
-# class UserDeleteView(LoginRequiredMixin, DeleteView):
-#     model = User
-#     template_name = "adoption/user_confirm_delete.html"
-#     success_url = reverse_lazy("user-list")
-
-
-# class UserSearchView(ListView):
-#     model = User
-#     template_name = "adoption/user_list.html"
-#     context_object_name = "users"
-
-
-#     def get_queryset(self):
-#         query = self.request.GET.get("q")
-#         if query:
-#           return User.objects.filter(username__icontains=query) | User.objects.filter(email__icontains=query)
-#         return User.objects.all()
 class CustomLoginView(LoginView):
     template_name = "adoption/auth/login.html"
 
@@ -453,3 +470,30 @@ def toggle_adoption_status(request, pk):
 
     pet.save()
     return redirect("pet-list")
+
+
+def pet_create(request):
+
+    ImageFormSet = modelformset_factory(PetImage, form=PetImageForm, extra=3)
+
+    if request.method == "POST":
+        form = PetForm(request.POST)
+        formset = ImageFormSet(request.POST, request.FILES, queryset=PetImage.objects.none())
+
+        if form.is_valid() and formset.is_valid():
+            pet = form.save()
+
+            for f in formset:
+                if f.cleaned_data:
+                    img = f.save(commit=False)
+                    img.pet = pet
+                    img.save()
+
+    else:
+        form = PetForm()
+        formset = ImageFormSet(queryset=PetImage.objects.none())
+
+    return render(request, "adoption/pet_form.html", {
+        "form": form,
+        "formset": formset
+    })

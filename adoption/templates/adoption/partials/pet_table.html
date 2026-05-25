@@ -23,15 +23,16 @@
       <td>
         <div class="relative w-20 h-20">
 
-          {% if pet.image %}
+          {% if pet.images.first %}
             <img
-              src="{{ pet.image.url }}"
+              src="{{ pet.images.first.image.url }}"
               class="w-20 h-20 object-cover rounded-lg"
-            />
+            >
           {% else %}
-            <div class="w-20 h-20 bg-base-200 flex items-center justify-center rounded-lg text-xs">
-              No Image
-            </div>
+            <img
+              src="https://placehold.co/80x80"
+              class="w-20 h-20 object-cover rounded-lg"
+            >
           {% endif %}
 
           <!-- FAVORITE -->
@@ -40,7 +41,11 @@
               href="{% url 'toggle-favorite' pet.pk %}"
               class="absolute top-1 right-1 text-lg bg-white/70 rounded-full px-1"
             >
-              {% if pet.id in favorite_ids %} ❤️ {% else %} 🤍 {% endif %}
+              {% if pet.id in favorite_ids %}
+                ❤️
+              {% else %}
+                🤍
+              {% endif %}
             </a>
           {% endif %}
 
@@ -64,19 +69,35 @@
       <td>{{ pet.breed }}</td>
 
       <!-- LOCATION -->
-      <td>{{ pet.location }}</td>
+      <td>
+        {% if pet.branch %}
+          {{ pet.branch.city.name }},
+          {{ pet.branch.city.province.code }}
+        {% else %}
+          —
+        {% endif %}
+      </td>
 
       <!-- ADOPTION STATUS -->
       <td>
+
         {% if pet.adoption_status == "available" %}
-          <span class="badge badge-info">Available</span>
+          <span class="badge badge-info">
+            Available
+          </span>
 
         {% elif pet.adoption_status == "pending" %}
-          <span class="badge badge-warning">Pending</span>
+          <span class="badge badge-warning">
+            Pending
+          </span>
 
         {% elif pet.adoption_status == "adopted" %}
-          <span class="badge badge-success">Adopted</span>
+          <span class="badge badge-success">
+            Adopted
+          </span>
+
         {% endif %}
+
       </td>
 
       <!-- ACTIONS -->
@@ -86,18 +107,28 @@
 
           <div class="flex gap-2">
 
-            <a href="{% url 'pet-update' pet.id %}" class="btn btn-xs btn-warning">
+            <a
+              href="{% url 'pet-update' pet.id %}"
+              class="btn btn-xs btn-warning"
+            >
               Edit
             </a>
 
-            <a href="{% url 'pet-delete' pet.id %}" class="btn btn-xs btn-error">
+            <a
+              href="{% url 'pet-delete' pet.id %}"
+              class="btn btn-xs btn-error"
+            >
               Delete
             </a>
 
           </div>
 
         {% else %}
-          <span class="text-gray-400 text-sm">—</span>
+
+          <span class="text-gray-400 text-sm">
+            —
+          </span>
+
         {% endif %}
 
       </td>
@@ -105,11 +136,13 @@
     </tr>
 
     {% empty %}
+
     <tr>
       <td colspan="8" class="text-center py-6">
         No pets found.
       </td>
     </tr>
+
     {% endfor %}
 
   </tbody>
@@ -118,8 +151,10 @@
 <!-- ADD BUTTON -->
 {% if user.is_superuser %}
 <div class="flex justify-end mt-4">
+
   <a href="{% url 'pet-create' %}" class="btn btn-primary">
     + Add New Pet
   </a>
+
 </div>
 {% endif %}

@@ -1,56 +1,51 @@
-{% extends 'adoption/base.html' %}
-
-{% block title %}{{ pet.name }}{% endblock %}
+{% extends "adoption/base.html" %}
 
 {% block content %}
 
-<div class="max-w-3xl mx-auto">
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow">
 
-    {% if pet.image %}
-        <img
-            src="{{ pet.image.url }}"
-            alt="{{ pet.name }}"
-            class="w-full max-h-[500px] object-cover rounded-xl mb-6"
-        >
-    {% endif %}
+  <!-- TITLE -->
+  <h1 class="text-3xl font-bold mb-4">
+    {{ pet.name }}
+  </h1>
 
-    <h1 class="text-4xl font-bold mb-4">
-        {{ pet.name }}
-    </h1>
+  <!-- IMAGES -->
+  <div class="grid grid-cols-2 gap-3 mb-6">
+    {% for img in pet.images.all %}
+      <img src="{{ img.image.url }}" class="rounded-lg w-full h-48 object-cover">
+    {% empty %}
+      <img src="https://placehold.co/400x300" class="rounded-lg">
+    {% endfor %}
+  </div>
 
-    <div class="mb-4">
-        {% if pet.pet_status == "lost" %}
-            <span class="badge badge-error">Lost</span>
-        {% else %}
-            <span class="badge badge-success">Found</span>
-        {% endif %}
-    </div>
+  <!-- INFO -->
+  <div class="space-y-2 text-lg">
 
-    <div class="space-y-2 text-lg">
-        <p><strong>Breed:</strong> {{ pet.breed }}</p>
-        <p><strong>Species:</strong> {{ pet.species }}</p>
-        <p><strong>Gender:</strong> {{ pet.gender }}</p>
-        <p><strong>Age:</strong> {{ pet.age }}</p>
-        <p><strong>Location:</strong> {{ pet.location }}</p>
-        
-    </div>
+    <p><b>Species:</b> {{ pet.species }}</p>
+    <p><b>Breed:</b> {{ pet.breed }}</p>
+    <p><b>Gender:</b> {{ pet.gender }}</p>
+    <p><b>Age:</b> {{ pet.age }}</p>
 
-    <div class="mt-6">
-        <h2 class="text-2xl font-bold mb-2">Description</h2>
+    <p><b>Status:</b> {{ pet.adoption_status }}</p>
+    <p><b>Pet Status:</b> {{ pet.pet_status }}</p>
 
-        <p>
-            {{ pet.description|default:"No description provided." }}
-        </p>
-    </div>
+    <p>
+      <b>Location:</b>
+      {{ pet.branch.city.name }},
+      {{ pet.branch.city.province.code }}
+    </p>
 
-    <div class="mt-8">
-        <a
-            href="{% url 'pet-list' %}"
-            class="btn btn-outline"
-        >
-            Back
-        </a>
-    </div>
+    <p><b>Description:</b></p>
+    <p class="text-gray-600">{{ pet.description }}</p>
+
+  </div>
+
+  <!-- BACK BUTTON -->
+  <div class="mt-6">
+    <a href="{% url 'pet-list' %}" class="btn btn-primary">
+      ← Back to list
+    </a>
+  </div>
 
 </div>
 

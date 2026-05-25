@@ -1,18 +1,96 @@
-{% extends 'adoption/base.html' %}
-
-{% block title %}Report Pet{% endblock %}
+{% extends "adoption/base.html" %}
 
 {% block content %}
 
-<h1 class="text-2xl font-bold mb-4">Report a Lost Pet</h1>
+<div class="max-w-2xl mx-auto">
 
-<form method="POST" enctype="multipart/form-data" class="space-y-4">
+  <h1 class="text-3xl font-bold mb-6">
+    Add New Pet
+  </h1>
+
+  <form method="POST" enctype="multipart/form-data" class="space-y-4">
+
     {% csrf_token %}
-    {{ form.as_p }}
 
-    <button class="btn btn-primary">
-        Submit Pet
+    <!-- PET INFO -->
+    <div>
+      <label>Name</label>
+      {{ form.name }}
+    </div>
+
+    <div>
+      <label>Age</label>
+      {{ form.age }}
+    </div>
+
+    <div>
+      <label>Breed</label>
+      {{ form.breed }}
+    </div>
+
+    <div>
+      <label>Species</label>
+      {{ form.species }}
+    </div>
+
+    <div>
+      <label>Gender</label>
+      {{ form.gender }}
+    </div>
+
+    <div>
+      <label>Description</label>
+      {{ form.description }}
+    </div>
+
+    <div>
+      <label>Adoption Status</label>
+      {{ form.adoption_status }}
+    </div>
+
+    <div>
+      <label>Pet Status</label>
+      {{ form.pet_status }}
+    </div>
+
+    <div>
+      <label>Branch</label>
+      {{ form.branch }}
+    </div>
+
+    <!-- IMAGE -->
+    <div>
+      <label class="font-bold">Pet Images</label>
+      {{ formset.management_form }}
+
+      {% for f in formset %}
+        <div class="mb-4">
+          {{ f.image }}
+      
+          {% if f.instance.pk %}
+            <img
+              src="{{ f.instance.image.url }}"
+              class="w-24 h-24 object-cover rounded mt-2"
+            >
+          {% endif %}
+      
+          {% if f.DELETE %}
+            <label class="flex items-center gap-2 mt-2">
+              {{ f.DELETE }}
+              Delete image
+            </label>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+
+    <button type="submit" class="btn btn-primary w-full">
+      Save Pet
     </button>
-</form>
+
+  </form>
+
+</div>
 
 {% endblock %}

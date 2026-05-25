@@ -1,31 +1,36 @@
 from django import forms
-from .models import Pet, User as CustomUser, Branch
-
-# Authentication
+from django.forms import modelformset_factory
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+
+from .models import Pet, Branch, PetImage, City
+
+User = get_user_model()
 
 
+# ───────── PET FORM ─────────
 class PetForm(forms.ModelForm):
+
     class Meta:
-        model  = Pet
-        fields = ['species', 'gender', 'pet_status', 'name', 'age',
-                  'breed', 'description', 'adoption_status', 'branch']
+        model = Pet
+        fields = "__all__"
 
 
+# ───────── PET IMAGE ─────────
+class PetImageForm(forms.ModelForm):
+    class Meta:
+        model = PetImage
+        fields = ["image"]
+
+
+# ───────── USER FORM ─────────
 class UserForm(forms.ModelForm):
     class Meta:
-        model  = CustomUser
+        model = User
         fields = ['first_name', 'last_name', 'username', 'email']
 
 
-# class RegisterForm(UserCreationForm):
-#     email = forms.EmailField(required=True)
-
-#     class Meta:
-#         model  = User
-#         fields = ['username', 'email', 'password1', 'password2']
-
+# ───────── REGISTER FORM ─────────
 class CustomRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
@@ -33,16 +38,10 @@ class CustomRegisterForm(UserCreationForm):
         model = User
         fields = ("username", "email", "password1", "password2")
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.email = self.cleaned_data["email"]
 
-        if commit:
-            user.save()
-
-        return user
-
+# ───────── LOST PET FORM ─────────
 class LostPetForm(forms.ModelForm):
+
     class Meta:
         model = Pet
         fields = [
@@ -50,20 +49,19 @@ class LostPetForm(forms.ModelForm):
             "description",
             "pet_status", "adoption_status",
             "branch",
-    ]
- 
+        ]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # REMOVE shelter option
         self.fields['pet_status'].choices = [
             ('lost', 'Lost'),
             ('found', 'Found'),
         ]
 
+
+# ───────── BRANCH FORM ─────────
 class BranchForm(forms.ModelForm):
     class Meta:
         model = Branch
-        fields = ["name", "city", "province", "address", "phone", "notes"]
-
-    
+        fields = ["name", "city", "address", "phone"]
