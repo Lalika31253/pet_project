@@ -62,37 +62,43 @@ class PetDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 # for lost/found page
-class PetSearchAPIView(View):
+# class PetAdoptionSearchAPIView(View):
 
-    def get(self, request):
-        query = request.GET.get("q", "")
+#     def get(self, request):
+#         q = request.GET.get("q", "")
 
-        pets = Pet.objects.filter(
-            Q(name__icontains=query)
-            | Q(species__icontains=query)
-            | Q(breed__icontains=query)
-            | Q(location__icontains=query)
-            | Q(gender__icontains=query)
-            | Q(pet_status__icontains=query)
-        ).filter(pet_status__in=["lost", "found"])
+#         pets = Pet.objects.filter(
+#             Q(name__icontains=q) |
+#             Q(breed__icontains=q) |
+#             Q(species__icontains=q) |
+#             Q(description__icontains=q) |
+#             Q(branch__city__name__icontains=q) |
+#             Q(branch__city__province__code__icontains=q)
+#         ).select_related(
+#             "branch__city__province"
+#         ).prefetch_related("images").distinct()
 
-        return render(request, "adoption/partials/lost_pet_table.html", {"pets": pets})
+#         return render(
+#             request,
+#             "adoption/partials/pet_table.html",
+#             {"pets": pets}
+#         )
 
 
 # for adoption page
 class PetAdoptionSearchAPIView(View):
 
     def get(self, request):
-        query = request.GET.get("q", "")
+        q = request.GET.get("q", "")
 
         pets = Pet.objects.filter(
-            Q(name__icontains=query)
-            | Q(species__icontains=query)
-            | Q(breed__icontains=query)
-            | Q(location__icontains=query)
-            | Q(gender__icontains=query)
-            | Q(pet_status__icontains=query)
-        ).filter(pet_status="shelter")
+            Q(name__icontains=q) |
+            Q(breed__icontains=q) |
+            Q(species__icontains=q) |
+            Q(description__icontains=q) |
+            Q(branch__city__name__icontains=q) |
+            Q(branch__city__province__code__icontains=q)
+        ).select_related("branch__city__province").prefetch_related("images").distinct()
 
         return render(request, "adoption/partials/pet_table.html", {"pets": pets})
     
