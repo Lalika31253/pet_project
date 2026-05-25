@@ -149,19 +149,46 @@ def pet_list(request):
 
 class LostPetCreateView(LoginRequiredMixin, CreateView):
     model = Pet
-    form_class = LostPetForm
+    form_class = PetForm
     template_name = "adoption/lost_pet_form.html"
     success_url = reverse_lazy("lost-pets")
-    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        PetImageFormSet = modelformset_factory(
+            PetImage,
+            fields=("image",),
+            extra=3,
+            can_delete=False
+        )
+
+        if self.request.POST:
+            context["formset"] = PetImageFormSet(
+                self.request.POST,
+                self.request.FILES,
+                queryset=PetImage.objects.none()
+            )
+        else:
+            context["formset"] = PetImageFormSet(queryset=PetImage.objects.none())
+
+        return context
+
     def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.pet_status = "lost"
-        obj.branch = None
+        context = self.get_context_data()
+        formset = context["formset"]
 
-        obj.created_by = self.request.user  
+        self.object = form.save()
 
-        obj.save()
+        if formset.is_valid():
+            for f in formset:
+                if f.cleaned_data:
+                    img = f.save(commit=False)
+                    img.pet = self.object
+                    img.save()
+
         return super().form_valid(form)
+    
 
 
 class LostPetsView(ListView):

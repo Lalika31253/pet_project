@@ -10,6 +10,20 @@
     {% csrf_token %}
     {{ form.as_p }}
 
+    <!-- IMAGES -->
+    <div>
+        <label class="font-bold block mb-2">Images</label>
+    
+        {{ formset.management_form }}
+    
+        {% for f in formset %}
+            <div class="mb-3">
+                {{ f.image.errors }}
+                {{ f.image }}
+            </div>
+        {% endfor %}
+    </div>
+
     <button class="btn btn-primary">
         Submit Lost Pet
     </button>

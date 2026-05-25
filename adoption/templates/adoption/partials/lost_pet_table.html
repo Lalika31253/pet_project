@@ -20,11 +20,7 @@
           <div class="relative w-20 h-20">
   
             {% if pet.images.first %}
-  
-              <img
-                src="{{ pet.images.first.image.url }}"
-                class="w-20 h-20 object-cover rounded-lg"
-              />
+            <img src="{{ pet.images.first.image.url }}">
   
             {% else %}
   
