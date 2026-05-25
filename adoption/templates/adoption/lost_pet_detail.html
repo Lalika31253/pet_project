@@ -4,52 +4,63 @@
 
 {% block content %}
 
-<div class="max-w-3xl mx-auto">
+<div class="max-w-4xl mx-auto space-y-6">
 
-    {% if pet.image %}
-        <img
-            src="{{ pet.image.url }}"
-            alt="{{ pet.name }}"
-            class="w-full max-h-[500px] object-cover rounded-xl mb-6"
-        >
-    {% endif %}
-
-    <h1 class="text-4xl font-bold mb-4">
-        {{ pet.name }}
-    </h1>
-
-    <div class="mb-4">
-        {% if pet.pet_status == "lost" %}
-            <span class="badge badge-error">Lost</span>
-        {% else %}
-            <span class="badge badge-success">Found</span>
-        {% endif %}
+    <!-- IMAGE GALLERY -->
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+        {% for img in pet.images.all %}
+            <img
+                src="{{ img.image.url }}"
+                class="w-full h-48 object-cover rounded-xl"
+            >
+        {% empty %}
+            <img
+                src="https://placehold.co/600x400"
+                class="w-full h-48 object-cover rounded-xl"
+            >
+        {% endfor %}
     </div>
 
-    <div class="space-y-2 text-lg">
+    <!-- HEADER -->
+    <div>
+        <h1 class="text-4xl font-bold">{{ pet.name }}</h1>
+
+        <div class="mt-2">
+            {% if pet.pet_status == "lost" %}
+                <span class="badge badge-error">Lost</span>
+            {% else %}
+                <span class="badge badge-success">Found</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- INFO CARD -->
+    <div class="bg-base-200 p-6 rounded-xl space-y-2">
+
         <p><strong>Breed:</strong> {{ pet.breed }}</p>
         <p><strong>Species:</strong> {{ pet.species }}</p>
         <p><strong>Gender:</strong> {{ pet.gender }}</p>
         <p><strong>Age:</strong> {{ pet.age }}</p>
-        <p><strong>Location:</strong> {{ pet.location }}</p>
-    </div>
-
-    <div class="mt-6">
-        <h2 class="text-2xl font-bold mb-2">Description</h2>
 
         <p>
-            {{ pet.description|default:"No description provided." }}
+            <strong>Location:</strong>
+            {{ pet.branch.city.name }},
+            {{ pet.branch.city.province.code }}
         </p>
+
+        <p><strong>Status:</strong> {{ pet.adoption_status }}</p>
     </div>
 
-    <div class="mt-8">
-        <a
-            href="{% url 'lost-pets' %}"
-            class="btn btn-outline"
-        >
-            Back
-        </a>
+    <!-- DESCRIPTION -->
+    <div>
+        <h2 class="text-2xl font-bold mb-2">Description</h2>
+        <p>{{ pet.description|default:"No description provided." }}</p>
     </div>
+
+    <!-- BACK BUTTON -->
+    <a href="{% url 'lost-pets' %}" class="btn btn-outline">
+        Back
+    </a>
 
 </div>
 
