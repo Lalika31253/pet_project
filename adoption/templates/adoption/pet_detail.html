@@ -2,49 +2,100 @@
 
 {% block content %}
 
-<div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow">
+<div class="max-w-6xl mx-auto px-4 py-6 space-y-8">
 
-  <!-- TITLE -->
-  <h1 class="text-3xl font-bold mb-4">
-    {{ pet.name }}
-  </h1>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-  <!-- IMAGES -->
-  <div class="grid grid-cols-2 gap-3 mb-6">
-    {% for img in pet.images.all %}
-      <img src="{{ img.image.url }}" class="rounded-lg w-full h-48 object-cover">
-    {% empty %}
-      <img src="https://placehold.co/400x300" class="rounded-lg">
-    {% endfor %}
-  </div>
+    <!-- LEFT SIDE -->
+    <div class="lg:col-span-8 space-y-6">
 
-  <!-- INFO -->
-  <div class="space-y-2 text-lg">
+      <!-- IMAGE -->
+      <div class="aspect-[16/9] w-full rounded-3xl overflow-hidden shadow-md bg-base-200">
 
-    <p><b>Species:</b> {{ pet.species }}</p>
-    <p><b>Breed:</b> {{ pet.breed }}</p>
-    <p><b>Gender:</b> {{ pet.gender }}</p>
-    <p><b>Age:</b> {{ pet.age }}</p>
+        {% with pet.images.first as img %}
+          {% if img %}
+            <img src="{{ img.image.url }}" class="w-full h-full object-cover">
+          {% else %}
+            <img src="https://placehold.co/800x500" class="w-full h-full object-cover">
+          {% endif %}
+        {% endwith %}
 
-    <p><b>Status:</b> {{ pet.adoption_status }}</p>
-    <p><b>Pet Status:</b> {{ pet.pet_status }}</p>
+      </div>
 
-    <p>
-      <b>Location:</b>
-      {{ pet.branch.city.name }},
-      {{ pet.branch.city.province.code }}
-    </p>
+      <!-- TITLE + STATUS -->
+      <div class="bg-base-100 p-6 rounded-3xl shadow-sm border border-base-200 space-y-2">
 
-    <p><b>Description:</b></p>
-    <p class="text-gray-600">{{ pet.description }}</p>
+        <h1 class="text-4xl font-bold">{{ pet.name }}</h1>
 
-  </div>
+        <div class="flex gap-2">
 
-  <!-- BACK BUTTON -->
-  <div class="mt-6">
-    <a href="{% url 'pet-list' %}" class="btn btn-primary">
-      ← Back to list
-    </a>
+          {% if pet.pet_status == "lost" %}
+            <span class="badge badge-error badge-lg px-4 py-2 rounded-full">Lost</span>
+          {% else %}
+            <span class="badge badge-success badge-lg px-4 py-2 rounded-full">Found</span>
+          {% endif %}
+
+          {% if pet.adoption_status == "available" %}
+            <span class="badge badge-info badge-lg px-4 py-2 rounded-full">Available</span>
+          {% elif pet.adoption_status == "pending" %}
+            <span class="badge badge-warning badge-lg px-4 py-2 rounded-full">Pending</span>
+          {% elif pet.adoption_status == "adopted" %}
+            <span class="badge badge-success badge-lg px-4 py-2 rounded-full">Adopted</span>
+          {% endif %}
+
+        </div>
+
+      </div>
+
+      <!-- DESCRIPTION -->
+      <div class="bg-base-100 p-6 rounded-3xl shadow-sm border border-base-200 space-y-3">
+
+        <h2 class="text-2xl font-bold">Description</h2>
+
+        <p class="text-base-content/70 leading-relaxed">
+          {{ pet.description|default:"No description provided." }}
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="lg:col-span-4 space-y-6">
+
+      <!-- INFO CARD -->
+      <div class="bg-base-100 p-6 rounded-3xl shadow-md border border-base-200 space-y-4">
+
+        <h3 class="text-xl font-bold">Pet Details</h3>
+
+        <div class="space-y-2 text-base-content/70">
+
+          <p><b>Species:</b> {{ pet.species }}</p>
+          <p><b>Breed:</b> {{ pet.breed }}</p>
+          <p><b>Gender:</b> {{ pet.gender }}</p>
+          <p><b>Age:</b> {{ pet.age }}</p>
+
+          <p>
+            <b>Location:</b>
+            {{ pet.branch.city.name }},
+            {{ pet.branch.city.province.code }}
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- ACTION -->
+      <div class="bg-base-100 p-6 rounded-3xl shadow-md border border-base-200">
+
+        <a href="{% url 'pet-list' %}" class="btn btn-outline w-full rounded-2xl">
+          Back to Listings
+        </a>
+
+      </div>
+
+    </div>
+
   </div>
 
 </div>

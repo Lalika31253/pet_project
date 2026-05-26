@@ -2,94 +2,114 @@
 
 {% block content %}
 
-<div class="max-w-2xl mx-auto">
+<div class="max-w-3xl mx-auto py-8">
 
-  <h1 class="text-3xl font-bold mb-6">
-    Add New Pet
-  </h1>
+  <!-- CARD -->
+  <div class="bg-base-100 shadow-xl border border-base-200 rounded-3xl p-8 space-y-6">
 
-  <form method="POST" enctype="multipart/form-data" class="space-y-4">
+    <!-- TITLE -->
+    <h1 class="text-3xl font-bold text-center">
+      🐾 Add New Pet
+    </h1>
 
-    {% csrf_token %}
+    <form method="POST" enctype="multipart/form-data" class="space-y-6">
 
-    <!-- PET INFO -->
-    <div>
-      <label>Name</label>
-      {{ form.name }}
-    </div>
+      {% csrf_token %}
 
-    <div>
-      <label>Age</label>
-      {{ form.age }}
-    </div>
+      <!-- GRID FIELDS -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-    <div>
-      <label>Breed</label>
-      {{ form.breed }}
-    </div>
-
-    <div>
-      <label>Species</label>
-      {{ form.species }}
-    </div>
-
-    <div>
-      <label>Gender</label>
-      {{ form.gender }}
-    </div>
-
-    <div>
-      <label>Description</label>
-      {{ form.description }}
-    </div>
-
-    <div>
-      <label>Adoption Status</label>
-      {{ form.adoption_status }}
-    </div>
-
-    <div>
-      <label>Pet Status</label>
-      {{ form.pet_status }}
-    </div>
-
-    <div>
-      <label>Branch</label>
-      {{ form.branch }}
-    </div>
-
-    <!-- IMAGE -->
-    <div>
-      <label class="font-bold">Pet Images</label>
-      {{ formset.management_form }}
-
-      {% for f in formset %}
-        <div class="mb-4">
-          {{ f.image }}
-      
-          {% if f.instance.pk %}
-            <img
-              src="{{ f.instance.image.url }}"
-              class="w-24 h-24 object-cover rounded mt-2"
-            >
-          {% endif %}
-      
-          {% if f.DELETE %}
-            <label class="flex items-center gap-2 mt-2">
-              {{ f.DELETE }}
-              Delete image
-            </label>
-          {% endif %}
+        <div>
+          <label class="label font-semibold">Name</label>
+          {{ form.name }}
         </div>
-      {% endfor %}
-    </div>
 
+        <div>
+          <label class="label font-semibold">Age</label>
+          {{ form.age }}
+        </div>
 
-    <button type="submit" class="btn btn-primary w-full">
-      Save Pet
-    </button>
+        <div>
+          <label class="label font-semibold">Breed</label>
+          {{ form.breed }}
+        </div>
 
-  </form>
+        <div>
+          <label class="label font-semibold">Species</label>
+          {{ form.species }}
+        </div>
+
+        <div>
+          <label class="label font-semibold">Gender</label>
+          {{ form.gender }}
+        </div>
+
+        <div>
+          <label class="label font-semibold">Branch</label>
+          {{ form.branch }}
+        </div>
+
+      </div>
+
+      <!-- FULL WIDTH FIELDS -->
+      <div>
+        <label class="label font-semibold">Description</label>
+        {{ form.description }}
+      </div>
+
+      <div>
+        <label class="label font-semibold">Adoption Status</label>
+        {{ form.adoption_status }}
+      </div>
+
+      <div>
+        <label class="label font-semibold">Pet Status</label>
+        {{ form.pet_status }}
+      </div>
+
+      <!-- IMAGES -->
+      <div class="bg-base-200 p-5 rounded-2xl space-y-4">
+
+        <label class="font-bold text-lg">📷 Pet Images</label>
+
+        {{ formset.management_form }}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          {% for f in formset %}
+            <div class="bg-base-100 p-4 rounded-xl border border-base-300 space-y-3">
+
+              {{ f.image }}
+
+              {% if f.instance.pk %}
+                <img
+                  src="{{ f.instance.image.url }}"
+                  class="w-28 h-28 object-cover rounded-xl shadow"
+                >
+              {% endif %}
+
+              {% if f.DELETE %}
+                <label class="flex items-center gap-2 text-sm text-error">
+                  {{ f.DELETE }}
+                  Delete image
+                </label>
+              {% endif %}
+
+            </div>
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+      <!-- SUBMIT -->
+      <button type="submit" class="btn btn-primary w-full rounded-xl">
+        Save Pet
+      </button>
+
+    </form>
+
+  </div>
 
 </div>
 

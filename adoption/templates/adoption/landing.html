@@ -4,21 +4,42 @@
 
 {% block content %}
 
-<div class="max-w-6xl mx-auto p-6">
 
-    <h1 class="text-4xl font-bold text-center mb-8">
-        Find Pets Across Canada
-    </h1>
 
-    <!-- TOOLTIP -->
-    <div id="tooltip"></div>
+    <!-- SINGLE TIGHT CONTAINER -->
+    <div class="max-w-6xl mx-auto px-6 pt-4 pb-6 space-y-3">
 
-    <!-- REAL SVG MAP -->
-    <div class="map-wrapper">
-        {% include 'images/canada_map.svg' %}
+        <!-- TITLE -->
+        <div class="text-center space-y-1">
+
+            <h1 class="text-5xl font-bold leading-tight">
+                Find Pets Across Canada 🐾
+            </h1>
+
+            <p class="text-base-content/60 text-base">
+                Click on a province to explore pets near you.
+            </p>
+
+        </div>
+
+        <!-- MAP CARD (now directly under title) -->
+        <div class="bg-base-200/50 border border-base-300 rounded-3xl shadow-lg p-4">
+
+            <!-- TOOLTIP -->
+            <div id="tooltip"
+                 class="absolute hidden bg-black text-white px-3 py-1 rounded-lg text-sm pointer-events-none z-50">
+            </div>
+
+            <!-- MAP -->
+            <div class="map-wrapper flex justify-center">
+                {% include 'images/canada_map.svg' %}
+            </div>
+
+        </div>
+
     </div>
 
-</div>
+
 
 <script>
 
@@ -27,13 +48,11 @@ function goToProvince(province) {
 }
 
 const tooltip = document.getElementById('tooltip');
-
 const provinces = document.querySelectorAll('.province');
 
 provinces.forEach(province => {
 
     province.addEventListener('mousemove', (e) => {
-
         tooltip.style.display = 'block';
 
         tooltip.innerHTML =
@@ -56,53 +75,34 @@ provinces.forEach(province => {
 
 .map-wrapper svg {
     width: 100%;
-    max-width: 1000px;
+    max-width: 950px;
     height: auto;
 }
 
 .province {
     fill: #cbd5e1;
     stroke: white;
-    stroke-width: 1.5;
+    stroke-width: 1.2;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.2s ease;
 }
 
 .province:hover {
     fill: #facc15;
+    transform: scale(1.01);
 }
 
 #tooltip {
     position: absolute;
     display: none;
-    background: black;
+    background: rgba(0,0,0,0.85);
     color: white;
-    padding: 8px 12px;
-    border-radius: 10px;
-    pointer-events: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 13px;
     z-index: 9999;
-    font-size: 14px;
 }
 
 </style>
 
 {% endblock %}
-
-
-
-{% comment %} {% extends 'adoption/base.html' %}
-{% load static %}
-
-{% block title %}Landing{% endblock %}
-
-{% block content %}
-
-<h1>Welcome</h1>
-
-<img src="https://upload.wikimedia.org/wikipedia/commons/3/38/Canada_blank_map.svg"
-     style="width:100%; height:auto; display:block;">
-
-{% endblock %}
-
-
- {% endcomment %}

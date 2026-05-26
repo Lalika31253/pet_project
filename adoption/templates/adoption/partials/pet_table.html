@@ -1,123 +1,133 @@
-<table class="table w-full border rounded-xl overflow-hidden">
+<!-- TOP BAR -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
 
-  <!-- HEADER -->
-  <thead class="bg-base-200">
-    <tr>
-      <th>Photo</th>
-      <th>Name</th>
-      <th>Species</th>
-      <th>Gender</th>
-      <th>Breed</th>
-      <th>Location</th>
-      <th>Adoption Status</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
+  <!-- TITLE -->
+  <div>
+    <h1 class="text-4xl font-bold leading-tight">
+      Shelter Pets 🐾
+    </h1>
 
-  <tbody>
+    <p class="text-base-content/60 mt-1">
+      Browse pets available for adoption across Canada.
+    </p>
+  </div>
 
-    {% for pet in pets %}
-    <tr class="hover align-middle">
+  <!-- ADD BUTTON -->
+  {% if user.is_superuser %}
+  <a href="{% url 'pet-create' %}"
+     class="btn btn-primary rounded-2xl px-6 shadow-lg hover:shadow-xl transition-all duration-300">
+     
+    <span class="text-lg">＋</span>
+    Add New Pet
 
-      <!-- PHOTO -->
-      <td>
-        <div class="relative w-20 h-20">
+  </a>
+  {% endif %}
 
-          {% if pet.images.first %}
-            <img
-              src="{{ pet.images.first.image.url }}"
-              class="w-20 h-20 object-cover rounded-lg"
-            >
+</div>
+
+
+<!-- PET GRID -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+  {% for pet in pets %}
+  <div class="bg-base-100 border border-base-300 rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+
+    <!-- IMAGE -->
+    <div class="relative h-56 overflow-hidden">
+
+      {% if pet.images.first %}
+        <img
+          src="{{ pet.images.first.image.url }}"
+          class="w-full h-full object-cover hover:scale-105 transition duration-300"
+        >
+      {% else %}
+        <img
+          src="https://placehold.co/600x400"
+          class="w-full h-full object-cover"
+        >
+      {% endif %}
+
+      <!-- FAVORITE -->
+      {% if user.is_authenticated %}
+        <a
+          href="{% url 'toggle-favorite' pet.pk %}"
+          class="absolute top-3 right-3 bg-white/80 backdrop-blur-md rounded-full px-2 py-1 shadow-md hover:scale-110 transition"
+        >
+          {% if pet.id in favorite_ids %}
+            ❤️
           {% else %}
-            <img
-              src="https://placehold.co/80x80"
-              class="w-20 h-20 object-cover rounded-lg"
-            >
+            🤍
           {% endif %}
-
-          <!-- FAVORITE -->
-          {% if user.is_authenticated %}
-            <a
-              href="{% url 'toggle-favorite' pet.pk %}"
-              class="absolute top-1 right-1 text-lg bg-white/70 rounded-full px-1"
-            >
-              {% if pet.id in favorite_ids %}
-                ❤️
-              {% else %}
-                🤍
-              {% endif %}
-            </a>
-          {% endif %}
-
-        </div>
-      </td>
-
-      <!-- NAME -->
-      <td class="font-bold text-lg">
-        <a href="{% url 'pet-detail' pet.id %}" class="link link-hover">
-          {{ pet.name }}
         </a>
-      </td>
+      {% endif %}
 
-      <!-- SPECIES -->
-      <td>{{ pet.species }}</td>
-
-      <!-- GENDER -->
-      <td>{{ pet.gender }}</td>
-
-      <!-- BREED -->
-      <td>{{ pet.breed }}</td>
-
-      <!-- LOCATION -->
-      <td>
-        {% if pet.branch %}
-          {{ pet.branch.city.name }},
-          {{ pet.branch.city.province.code }}
-        {% else %}
-          —
-        {% endif %}
-      </td>
-
-      <!-- ADOPTION STATUS -->
-      <td>
-
+      <!-- STATUS -->
+      <div class="absolute top-3 left-3">
         {% if pet.adoption_status == "available" %}
-          <span class="badge badge-info">
+          <span class="badge badge-info rounded-full px-3 py-2">
             Available
           </span>
 
         {% elif pet.adoption_status == "pending" %}
-          <span class="badge badge-warning">
+          <span class="badge badge-warning rounded-full px-3 py-2">
             Pending
           </span>
 
         {% elif pet.adoption_status == "adopted" %}
-          <span class="badge badge-success">
+          <span class="badge badge-success rounded-full px-3 py-2">
             Adopted
           </span>
-
         {% endif %}
+      </div>
 
-      </td>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="p-5 space-y-3">
+
+      <!-- NAME -->
+      <a href="{% url 'pet-detail' pet.id %}"
+         class="block text-2xl font-bold hover:text-primary transition">
+        {{ pet.name }}
+      </a>
+
+      <!-- META -->
+      <div class="space-y-1 text-sm text-base-content/60">
+
+        <p>
+          {{ pet.species }} • {{ pet.gender }}
+        </p>
+
+        <p>
+          {{ pet.breed }}
+        </p>
+
+        <p>
+          📍
+          {% if pet.branch %}
+            {{ pet.branch.city.name }},
+            {{ pet.branch.city.province.code }}
+          {% else %}
+            —
+          {% endif %}
+        </p>
+
+      </div>
 
       <!-- ACTIONS -->
-      <td>
+      <div class="flex justify-between items-center pt-4 border-t border-base-200">
 
         {% if user.is_authenticated and user.is_superuser %}
 
           <div class="flex gap-2">
 
-            <a
-              href="{% url 'pet-update' pet.id %}"
-              class="btn btn-xs btn-warning"
-            >
+            <a href="{% url 'pet-update' pet.id %}"
+               class="btn btn-sm btn-warning rounded-xl">
               Edit
             </a>
 
-            <a
-              href="{% url 'pet-delete' pet.id %}"
-              class="btn btn-xs btn-error"
-            >
+            <a href="{% url 'pet-delete' pet.id %}"
+               class="btn btn-sm btn-error rounded-xl">
               Delete
             </a>
 
@@ -125,36 +135,17 @@
 
         {% else %}
 
-          <span class="text-gray-400 text-sm">
-            —
+          <span class="text-base-content/40 text-sm">
+            View Details →
           </span>
 
         {% endif %}
 
-      </td>
+      </div>
 
-    </tr>
+    </div>
 
-    {% empty %}
-
-    <tr>
-      <td colspan="8" class="text-center py-6">
-        No pets found.
-      </td>
-    </tr>
-
-    {% endfor %}
-
-  </tbody>
-</table>
-
-<!-- ADD BUTTON -->
-{% if user.is_superuser %}
-<div class="flex justify-end mt-4">
-
-  <a href="{% url 'pet-create' %}" class="btn btn-primary">
-    + Add New Pet
-  </a>
+  </div>
+  {% endfor %}
 
 </div>
-{% endif %}

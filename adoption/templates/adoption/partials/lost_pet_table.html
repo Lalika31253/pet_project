@@ -1,101 +1,95 @@
-<table class="table w-full border rounded-xl overflow-hidden">
-    <thead class="bg-base-200">
-      <tr>
-        <th>Photo</th>
-        <th>Name</th>
-        <th>Status</th>
-        <th>Species</th>
-        <th>Location</th>
-        <th>Description</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-    <tbody>
-      {% for pet in pets %}
-      <tr class="hover align-middle">
-
-        <!-- PHOTO -->
-        <td>
-            <div class="w-20 h-20">
-          
-              {% with pet.images.first as img %}
-                {% if img %}
-                  <img
-                    src="{{ img.image.url }}"
-                    class="w-20 h-20 object-cover rounded-lg"
-                  >
-                {% else %}
-                  <div class="w-20 h-20 bg-base-200 flex items-center justify-center rounded-lg text-xs">
-                    No Image
-                  </div>
-                {% endif %}
-              {% endwith %}
-          
+    {% for pet in pets %}
+    <div class="bg-base-100 border border-base-300 rounded-3xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+  
+      <!-- IMAGE -->
+      <div class="relative h-56 overflow-hidden">
+  
+        {% with pet.images.first as img %}
+          {% if img %}
+            <img
+              src="{{ img.image.url }}"
+              class="w-full h-full object-cover hover:scale-105 transition duration-300"
+            >
+          {% else %}
+            <div class="w-full h-full bg-base-200 flex items-center justify-center text-base-content/40">
+              No Image
             </div>
-          </td>
-        <!-- NAME -->
-        <td class="font-bold text-lg">
-          <a href="{% url 'lost-pet-detail' pet.id %}" class="link link-hover">
-            {{ pet.name }}
-          </a>
-        </td>
-
-        <!-- STATUS -->
-        <td>
+          {% endif %}
+        {% endwith %}
+  
+        <!-- STATUS BADGE -->
+        <div class="absolute top-3 left-3">
           {% if pet.pet_status == "lost" %}
             <span class="badge badge-error">Lost</span>
           {% else %}
             <span class="badge badge-success">Found</span>
           {% endif %}
-        </td>
-
-        <!-- SPECIES -->
-        <td>{{ pet.species }}</td>
-
+        </div>
+  
+      </div>
+  
+      <!-- CONTENT -->
+      <div class="p-5 space-y-2">
+  
+        <!-- NAME -->
+        <a href="{% url 'lost-pet-detail' pet.id %}"
+           class="text-xl font-bold hover:text-primary transition">
+          {{ pet.name }}
+        </a>
+  
+        <!-- META -->
+        <p class="text-sm text-base-content/60">
+          {{ pet.species }}
+        </p>
+  
         <!-- LOCATION -->
-        <td>{{ pet.branch.city }}</td>
-
+        <p class="text-sm text-base-content/60">
+          📍 {{ pet.branch.city }}
+        </p>
+  
         <!-- DESCRIPTION -->
-        <td>
+        <p class="text-sm text-base-content/50 line-clamp-2">
           {{ pet.description|default:"No description provided." }}
-        </td>
-
+        </p>
+  
         <!-- ACTIONS -->
-        <td>
+        <div class="flex justify-between items-center pt-3">
+  
           {% if user.is_authenticated %}
-
+  
             {% if user.is_superuser or pet.created_by_id == user.id %}
-
-              <a
-                href="{% url 'lost-pet-update' pet.id %}"
-                class="btn btn-warning btn-sm mr-2"
-              >
-                Update
-              </a>
-
-              <a
-                href="{% url 'lost-pet-delete' pet.id %}"
-                class="btn btn-error btn-sm"
-              >
-                Delete
-              </a>
-
+  
+              <div class="flex gap-2">
+  
+                <a
+                  href="{% url 'lost-pet-update' pet.id %}"
+                  class="btn btn-warning btn-xs rounded-xl"
+                >
+                  Update
+                </a>
+  
+                <a
+                  href="{% url 'lost-pet-delete' pet.id %}"
+                  class="btn btn-error btn-xs rounded-xl"
+                >
+                  Delete
+                </a>
+  
+              </div>
+  
             {% else %}
-              <span class="text-gray-400 text-sm">—</span>
+              <span class="text-base-content/40 text-sm">—</span>
             {% endif %}
-
+  
           {% endif %}
-        </td>
-
-      </tr>
-
-      {% empty %}
-      <tr>
-        <td colspan="7" class="text-center py-6">
-          No pets found.
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-</table>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+    {% endfor %}
+  
+  </div>

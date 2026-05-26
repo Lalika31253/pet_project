@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created for MapSVG plugin: http://mapsvg.com -->
 <div class="canada-map">
+   <div class="-mt-[160px]"
+      style="background-image: url('/static/images/canada-bg.jpg');">
+
+      {% comment %} <!-- Dark overlay -->
+      <div class="absolute inset-0 bg-black/40"></div> {% endcomment %}
+    
+
+
 <svg viewBox="0 0 1114 942"
    xmlns:mapsvg="http://mapsvg.com"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -103,7 +111,9 @@
      id="CA-YT" />
 </svg>
 
+</div>
 </div> 
+{% comment %} </div>  {% endcomment %}
 
 <script>
    function goToProvince(code) {

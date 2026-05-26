@@ -4,63 +4,111 @@
 
 {% block content %}
 
-<div class="max-w-4xl mx-auto space-y-6">
+<div class="max-w-6xl mx-auto px-4 py-6 space-y-8">
 
-    <!-- IMAGE GALLERY -->
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-        {% for img in pet.images.all %}
-            <img
-                src="{{ img.image.url }}"
-                class="w-full h-48 object-cover rounded-xl"
-            >
-        {% empty %}
-            <img
-                src="https://placehold.co/600x400"
-                class="w-full h-48 object-cover rounded-xl"
-            >
-        {% endfor %}
-    </div>
+    <!-- PAGE LAYOUT (like modern detail page) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-    <!-- HEADER -->
-    <div>
-        <h1 class="text-4xl font-bold">{{ pet.name }}</h1>
+        <!-- LEFT SIDE -->
+        <div class="lg:col-span-8 space-y-6">
 
-        <div class="mt-2">
-            {% if pet.pet_status == "lost" %}
-                <span class="badge badge-error">Lost</span>
-            {% else %}
-                <span class="badge badge-success">Found</span>
-            {% endif %}
+            <!-- IMAGE GALLERY -->
+            <div class="space-y-4">
+
+                <!-- MAIN IMAGE GRID -->
+                <div class="aspect-[16/9] w-full rounded-3xl overflow-hidden shadow-md bg-base-200">
+                    {% with pet.images.first as img %}
+                        {% if img %}
+                            <img src="{{ img.image.url }}" class="w-full h-full object-cover">
+                        {% else %}
+                            <img src="https://placehold.co/800x500" class="w-full h-full object-cover">
+                        {% endif %}
+                    {% endwith %}
+                </div>
+
+                <!-- THUMBNAILS -->
+                <div class="flex gap-3 overflow-x-auto pb-2">
+                    {% for img in pet.images.all %}
+                        <img
+                            src="{{ img.image.url }}"
+                            class="w-24 h-24 object-cover rounded-2xl shadow-sm hover:ring-2 hover:ring-primary transition cursor-pointer"
+                        >
+                    {% empty %}
+                        <img
+                            src="https://placehold.co/120x120"
+                            class="w-24 h-24 object-cover rounded-2xl"
+                        >
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <!-- TITLE + STATUS -->
+            <div class="bg-base-100 p-6 rounded-3xl shadow-sm border border-base-200 space-y-2">
+
+                <h1 class="text-4xl font-bold">{{ pet.name }}</h1>
+
+                <div>
+                    {% if pet.pet_status == "lost" %}
+                        <span class="badge badge-error badge-lg px-4 py-2 rounded-full">Lost</span>
+                    {% else %}
+                        <span class="badge badge-success badge-lg px-4 py-2 rounded-full">Found</span>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="bg-base-100 p-6 rounded-3xl shadow-sm border border-base-200 space-y-3">
+
+                <h2 class="text-2xl font-bold">Description</h2>
+                <p class="text-base-content/70 leading-relaxed">
+                    {{ pet.description|default:"No description provided." }}
+                </p>
+
+            </div>
+
         </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="lg:col-span-4 space-y-6">
+
+            <!-- INFO CARD -->
+            <div class="bg-base-100 p-6 rounded-3xl shadow-md border border-base-200 space-y-4">
+
+                <h3 class="text-xl font-bold">Pet Details</h3>
+
+                <div class="space-y-2 text-base-content/70">
+
+                    <p><strong>Breed:</strong> {{ pet.breed }}</p>
+                    <p><strong>Species:</strong> {{ pet.species }}</p>
+                    <p><strong>Gender:</strong> {{ pet.gender }}</p>
+                    <p><strong>Age:</strong> {{ pet.age }}</p>
+
+                    <p>
+                        <strong>Location:</strong>
+                        {{ pet.branch.city.name }},
+                        {{ pet.branch.city.province.code }}
+                    </p>
+
+                    <p><strong>Status:</strong> {{ pet.adoption_status }}</p>
+
+                </div>
+
+            </div>
+
+            <!-- ACTION CARD -->
+            <div class="bg-base-100 p-6 rounded-3xl shadow-md border border-base-200 space-y-3">
+
+                <a href="{% url 'lost-pets' %}" class="btn btn-outline w-full rounded-2xl">
+                    Back to Listings
+                </a>
+
+            </div>
+
+        </div>
+
     </div>
-
-    <!-- INFO CARD -->
-    <div class="bg-base-200 p-6 rounded-xl space-y-2">
-
-        <p><strong>Breed:</strong> {{ pet.breed }}</p>
-        <p><strong>Species:</strong> {{ pet.species }}</p>
-        <p><strong>Gender:</strong> {{ pet.gender }}</p>
-        <p><strong>Age:</strong> {{ pet.age }}</p>
-
-        <p>
-            <strong>Location:</strong>
-            {{ pet.branch.city.name }},
-            {{ pet.branch.city.province.code }}
-        </p>
-
-        <p><strong>Status:</strong> {{ pet.adoption_status }}</p>
-    </div>
-
-    <!-- DESCRIPTION -->
-    <div>
-        <h2 class="text-2xl font-bold mb-2">Description</h2>
-        <p>{{ pet.description|default:"No description provided." }}</p>
-    </div>
-
-    <!-- BACK BUTTON -->
-    <a href="{% url 'lost-pets' %}" class="btn btn-outline">
-        Back
-    </a>
 
 </div>
 
