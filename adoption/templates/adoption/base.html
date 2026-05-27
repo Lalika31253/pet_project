@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="retro">
+<html lang="en" data-theme="warmpet">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -14,43 +14,61 @@
       rel="stylesheet"
     />
 
+    <!-- Warm Theme -->
     <style>
+      :root {
+        --p: #ff8a4c;   /* warm orange */
+        --s: #ffd6a5;   /* soft peach */
+        --a: #7ae582;   /* soft green */
+        --b1: #fff7ed;  /* cream background */
+        --bc: #1f2937;  /* text */
+      }
+
+      body {
+        background: linear-gradient(180deg, #fff7ed 0%, #fffaf3 100%);
+      }
+
+      /* soft floating feel */
+      .soft-card {
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(255, 138, 76, 0.08);
+      }
+
       input.no-native-clear::-webkit-search-cancel-button {
         display: none !important;
-        -webkit-appearance: none !important;
-      }
-
-      input.no-native-clear::-ms-clear {
-        display: none !important;
-      }
-
-      input[type="search"] {
-        -moz-appearance: textfield;
       }
     </style>
   </head>
 
   <body
-    class="bg-base-200 text-base-content min-h-screen flex flex-col"
+    class="text-base-content min-h-screen flex flex-col"
     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
   >
 
     <!-- NAVBAR -->
-    <div class="navbar bg-base-100 shadow-md sticky top-0 z-50 px-4">
+    <div class="navbar bg-white/70 backdrop-blur-md shadow-sm sticky top-0 z-50 px-4 border-b border-orange-100">
 
       <!-- LEFT -->
       <div class="flex-1">
-        <a href="{% url 'landing' %}" class="btn btn-ghost text-xl font-bold">
-          🐾 PetFinder
+        <a href="{% url 'landing' %}" class="btn btn-ghost text-xl font-bold text-orange-500">
+          🐾 HappyPaw
         </a>
       </div>
 
       <!-- CENTER LINKS -->
       <div class="hidden lg:flex gap-2">
-        <a class="btn btn-ghost btn-sm" href="{% url 'about' %}">About</a>
-        <a class="btn btn-ghost btn-sm" href="{% url 'help' %}">Help Animals</a>
-        <a class="btn btn-ghost btn-sm" href="{% url 'pet-list' %}">Adoption</a>
-        <a class="btn btn-ghost btn-sm" href="{% url 'lost-pets' %}">Lost & Found</a>
+        <a class="btn btn-ghost btn-sm hover:bg-orange-100" href="{% url 'about' %}">
+          About
+        </a>
+        <a class="btn btn-ghost btn-sm hover:bg-orange-100" href="{% url 'help' %}">
+          Help Animals
+        </a>
+        <a class="btn btn-ghost btn-sm hover:bg-orange-100" href="{% url 'pet-list' %}">
+          Adoption
+        </a>
+        <a class="btn btn-ghost btn-sm hover:bg-orange-100" href="{% url 'lost-pets' %}">
+          Lost & Found
+        </a>
       </div>
 
       <!-- RIGHT -->
@@ -58,25 +76,29 @@
 
         {% if user.is_authenticated %}
 
-          <a href="{% url 'profile' %}" class="btn btn-sm btn-primary rounded-full">
+          <a href="{% url 'profile' %}"
+             class="btn btn-sm bg-orange-500 text-white hover:bg-orange-600 rounded-full">
             Profile
           </a>
 
           <div class="dropdown dropdown-end">
             <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-              <div class="w-10 rounded-full bg-primary text-white flex items-center justify-center">
-                👤
+              <div class="w-10 rounded-full bg-orange-400 text-white flex items-center justify-center shadow">
+                🐶
               </div>
             </label>
 
-            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+            <ul tabindex="0"
+                class="menu menu-sm dropdown-content mt-3 z-[1] p-3 shadow-lg bg-white rounded-box w-52 border border-orange-100">
+
               <li class="px-3 py-2 text-sm opacity-70">
                 {{ user.username }}
               </li>
+
               <li>
                 <form method="POST" action="{% url 'logout' %}">
                   {% csrf_token %}
-                  <button type="submit" class="text-left w-full">
+                  <button type="submit" class="text-left w-full hover:text-red-500">
                     Logout
                   </button>
                 </form>
@@ -86,7 +108,8 @@
 
         {% else %}
 
-          <a href="{% url 'login' %}" class="btn btn-sm btn-outline">
+          <a href="{% url 'login' %}"
+             class="btn btn-sm btn-outline border-orange-400 text-orange-500 hover:bg-orange-500 hover:text-white">
             Login
           </a>
 
@@ -99,6 +122,11 @@
     <main class="flex-1 p-6 max-w-7xl mx-auto w-full">
       {% block content %}{% endblock %}
     </main>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-6 text-sm text-orange-300">
+      © {{ now|date:"Y" }} HappyPaw • Built with care for animals 🧡
+    </footer>
 
     <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>

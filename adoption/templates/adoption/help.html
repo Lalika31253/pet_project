@@ -1,12 +1,132 @@
 {% extends 'adoption/base.html' %}
+
 {% block title %}Pets{% endblock %}
+
 {% block content %}
-<h1>Shelter Guardianship</h1>
 
-<p>
-  What kind of help is the most needed by animals in shelters? We here in Happy Paw believe that this is a regular support! 
+<div class="min-h-screen bg-gradient-to-b from-orange-50 via-white to-yellow-50">
 
-Guarding shelters from Happy Paw enables us to satisfy part of the basic needs of stray animals, which allows shelters to count on regular monthly support for cats and dogs. And the money that the shelters accumulate on their own are directed to solving other crucial problems.
-</p>
+    <div class="max-w-6xl mx-auto px-6 py-12 space-y-12">
+
+        <!-- ================= HERO ================= -->
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+            <!-- TEXT -->
+            <div class="space-y-6">
+
+                <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight">
+                    Shelter <span class="text-orange-500">Guardianship 🐾</span>
+                </h1>
+
+                <p class="text-lg text-gray-600 leading-relaxed">
+                    Supporting shelters means giving animals a second chance at life.
+                    Through regular care, donations, and volunteering, we help ensure every cat and dog
+                    receives food, safety, and love while waiting for their forever home.
+                </p>
+
+                <p class="text-gray-500 leading-relaxed">
+                    At Happy Paw, we believe consistent monthly support is powerful — but real change also happens
+                    when people give their time. Volunteers help walk dogs, clean shelters, comfort animals,
+                    and prepare them for adoption.
+                </p>
+
+                <!-- TAGS -->
+                <div class="flex flex-wrap gap-3 pt-2">
+
+                    <div class="px-4 py-2 rounded-full bg-orange-100 text-orange-700 font-semibold text-sm">
+                        ❤️ Monthly Support
+                    </div>
+
+                    <div class="px-4 py-2 rounded-full bg-green-100 text-green-700 font-semibold text-sm">
+                        🐾 Volunteering
+                    </div>
+
+                    <div class="px-4 py-2 rounded-full bg-yellow-100 text-yellow-700 font-semibold text-sm">
+                        🏡 Shelter Care
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- HERO IMAGE -->
+            <div class="relative">
+
+                <div class="absolute inset-0 bg-orange-300/30 blur-3xl rounded-full"></div>
+
+                <img
+                    src="https://static.vecteezy.com/system/resources/thumbnails/037/128/942/small/ai-generated-happy-little-orange-havanese-puppy-dog-and-cat-are-sitting-in-the-grass-photo.jpg"
+                    class="relative rounded-3xl shadow-2xl border w-full h-[420px] object-cover"
+                    alt="Shelter pets"
+                />
+
+            </div>
+
+        </div>
+
+        <!-- ================= IMPACT CARDS ================= -->
+        <div class="grid md:grid-cols-3 gap-6">
+
+            <div class="bg-white rounded-3xl shadow-md border p-6 space-y-3">
+                <div class="text-3xl">🐶</div>
+                <h3 class="text-xl font-bold">Food & Care</h3>
+                <p class="text-gray-500 text-sm">
+                    Regular support ensures pets are fed and properly cared for every day.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-md border p-6 space-y-3">
+                <div class="text-3xl">🏥</div>
+                <h3 class="text-xl font-bold">Medical Help</h3>
+                <p class="text-gray-500 text-sm">
+                    Donations help cover vaccinations, surgeries, and emergency treatments.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-md border p-6 space-y-3">
+                <div class="text-3xl">🤝</div>
+                <h3 class="text-xl font-bold">Volunteering</h3>
+                <p class="text-gray-500 text-sm">
+                    Volunteers walk dogs, clean shelters, and give animals emotional support.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- ================= IMAGE GALLERY ================= -->
+        <div class="grid md:grid-cols-3 gap-4">
+
+            <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop"
+                 class="rounded-2xl h-48 w-full object-cover shadow-md hover:scale-[1.02] transition">
+
+            <img src="https://d3544la1u8djza.cloudfront.net/APHI/Blog/2023/September/small-breeds-hero.jpg"
+                 class="rounded-2xl h-48 w-full object-cover shadow-md hover:scale-[1.02] transition">
+
+            <img src="https://t3.ftcdn.net/jpg/06/04/54/70/360_F_604547093_FmuK2VH2Gq5zoXzeJkygDsejsUxXZaOg.jpg"
+                 class="rounded-2xl h-48 w-full object-cover shadow-md hover:scale-[1.02] transition">
+
+        </div>
+
+        <!-- ================= FINAL CTA ================= -->
+        <div class="text-center bg-white border rounded-3xl shadow-lg p-10 space-y-4">
+
+            <h2 class="text-3xl font-black text-gray-900">
+                You Can Help in More Than One Way 🐾
+            </h2>
+
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Whether you donate, adopt, or volunteer — every action brings hope to animals waiting for a second chance.
+            </p>
+
+            <a href="/pets/"
+               class="inline-block mt-4 px-7 py-3 bg-orange-500 text-white font-bold rounded-2xl shadow hover:bg-orange-600 transition">
+                Explore Pets
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock %}

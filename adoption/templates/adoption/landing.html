@@ -4,43 +4,121 @@
 
 {% block content %}
 
+<!-- MAIN CONTAINER (TIGHTER) -->
+<div class="max-w-7xl mx-auto px-6 py-6 space-y-8">
 
+    <!-- HERO -->
+    <div class="grid lg:grid-cols-2 gap-10 items-center">
 
-    <!-- SINGLE TIGHT CONTAINER -->
-    <div class="max-w-6xl mx-auto px-6 pt-4 pb-6 space-y-3">
+        <!-- LEFT HERO -->
+        <div>
 
-        <!-- TITLE -->
-        <div class="text-center space-y-1">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100 text-orange-700 font-medium mb-4 border border-orange-200">
+                🐶 Helping Pets Find Loving Homes
+            </div>
 
-            <h1 class="text-5xl font-bold leading-tight">
-                Find Pets Across Canada 🐾
+            <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-4">
+                Adopt. Rescue.
+                <span class="text-orange-500">Love.</span>
             </h1>
 
-            <p class="text-base-content/60 text-base">
-                Click on a province to explore pets near you.
+            <p class="text-lg text-gray-600 leading-relaxed max-w-xl mb-6">
+                Explore pets across Canada, reconnect lost pets with families, and help animals find caring homes.
             </p>
+
+            <div class="flex flex-wrap gap-4">
+
+                <a href="/pets/"
+                   class="px-7 py-4 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-md transition hover:scale-105">
+                    Browse Pets
+                </a>
+
+                <a href="/lost-found/"
+                   class="px-7 py-4 rounded-2xl bg-gray-100 border border-gray-200 text-gray-700 hover:bg-gray-200 transition">
+                    Lost & Found
+                </a>
+
+            </div>
 
         </div>
 
-        <!-- MAP CARD (now directly under title) -->
-        <div class="bg-base-200/50 border border-base-300 rounded-3xl shadow-lg p-4">
+        <!-- RIGHT HERO IMAGE -->
+        <div class="flex justify-center">
+
+            <img
+                src="https://t3.ftcdn.net/jpg/04/18/06/84/360_F_418068474_VIWD3loz21dusicbe43VnAsAc9uZudyF.jpg"
+                class="rounded-3xl shadow-xl border object-cover w-full max-w-md h-[480px]"
+                alt="dog hero"
+            />
+
+        </div>
+
+    </div>
+
+    <!-- 🐾 IMAGE LEFT + MAP RIGHT -->
+    <div class="grid lg:grid-cols-5 gap-6 items-center">
+
+        <!-- LEFT IMAGE + TEXT -->
+        <div class="lg:col-span-2 space-y-5">
+
+            <div class="rounded-3xl overflow-hidden shadow-xl border border-orange-100">
+                <img
+                    src="https://static.vecteezy.com/system/resources/thumbnails/071/972/231/small/dog-and-cat-running-together-on-a-path-in-warm-sunlight-photo.jpeg"
+                    class="w-full h-[360px] object-cover"
+                    alt="happy dog"
+                />
+            </div>
+
+            <div class="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
+
+                <h3 class="text-xl font-bold text-gray-900 mb-2">
+                    🐾 About HappyPaw
+                </h3>
+
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    HappyPaw connects loving families with animals in need.
+                    Explore pets by region, help reunite lost pets, and support rescue organizations across Canada.
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT MAP -->
+        <div class="lg:col-span-3 bg-white border border-gray-200 rounded-3xl shadow-lg p-5">
+
+            <!-- HEADER -->
+            <div class="text-center mb-4">
+
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">
+                    🐾 Explore Pets by Province
+                </h2>
+
+                <p class="text-gray-500">
+                    Click on a province to discover pets near you
+                </p>
+
+            </div>
 
             <!-- TOOLTIP -->
             <div id="tooltip"
-                 class="absolute hidden bg-black text-white px-3 py-1 rounded-lg text-sm pointer-events-none z-50">
+                 class="absolute hidden bg-black text-white px-3 py-2 rounded-lg text-sm pointer-events-none z-50 shadow-lg">
             </div>
 
             <!-- MAP -->
-            <div class="map-wrapper flex justify-center">
-                {% include 'images/canada_map.svg' %}
+            <div class="flex justify-center">
+                <div class="w-full max-w-6xl h-[600px]">
+                    {% include 'images/canada_map.svg' %}
+                </div>
             </div>
 
         </div>
 
     </div>
 
+</div>
 
-
+<!-- SCRIPT -->
 <script>
 
 function goToProvince(province) {
@@ -53,14 +131,15 @@ const provinces = document.querySelectorAll('.province');
 provinces.forEach(province => {
 
     province.addEventListener('mousemove', (e) => {
-        tooltip.style.display = 'block';
 
+        tooltip.style.display = 'block';
         tooltip.innerHTML =
             province.id.charAt(0).toUpperCase() +
             province.id.slice(1);
 
         tooltip.style.left = e.pageX + 15 + 'px';
         tooltip.style.top = e.pageY + 15 + 'px';
+
     });
 
     province.addEventListener('mouseleave', () => {
@@ -71,35 +150,32 @@ provinces.forEach(province => {
 
 </script>
 
+<!-- STYLE -->
 <style>
 
 .map-wrapper svg {
     width: 100%;
-    max-width: 950px;
-    height: auto;
+    height: 100%;
+    display: block;
 }
 
 .province {
-    fill: #cbd5e1;
+    fill: #fdba74;
     stroke: white;
-    stroke-width: 1.2;
+    stroke-width: 1.5;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
 }
 
 .province:hover {
-    fill: #facc15;
-    transform: scale(1.01);
+    fill: #f97316;
+    transform: scale(1.02);
+    filter: drop-shadow(0 6px 12px rgba(249,115,22,0.4));
 }
 
 #tooltip {
     position: absolute;
     display: none;
-    background: rgba(0,0,0,0.85);
-    color: white;
-    padding: 6px 10px;
-    border-radius: 8px;
-    font-size: 13px;
     z-index: 9999;
 }
 

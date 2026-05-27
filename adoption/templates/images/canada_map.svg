@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created for MapSVG plugin: http://mapsvg.com -->
 <div class="canada-map">
-   <div class="-mt-[160px]"
+   <div class="ml-24"
       style="background-image: url('/static/images/canada-bg.jpg');">
 
-      {% comment %} <!-- Dark overlay -->
-      <div class="absolute inset-0 bg-black/40"></div> {% endcomment %}
-    
 
-
-<svg viewBox="0 0 1114 942"
+{% comment %} <svg viewBox="0 0 1114 942"
+   width="792.48273"
+   height="1030.8354"
    xmlns:mapsvg="http://mapsvg.com"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -17,7 +15,20 @@
    xmlns="http://www.w3.org/2000/svg"
    mapsvg:geoViewBox="-141.007366 83.116658 -52.648425 41.730628" 
    width="792.48273"
-   height="1030.8354">
+   height="1030.8354">  {% endcomment %}
+
+  <svg
+    viewBox="0 0 1114 942"
+    xmlns:mapsvg="http://mapsvg.com"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns="http://www.w3.org/2000/svg"
+    mapsvg:geoViewBox="-141.007366 83.116658 -52.648425 41.730628"
+    width="600px"
+    height="100%"
+    preserveAspectRatio="xMidYMid meet"
+    style="display:block;"> 
   <path
       id="alberta"
       class="province"
